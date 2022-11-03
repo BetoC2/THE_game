@@ -1,57 +1,44 @@
 #include "raylib.h"
-#define SCREEN_SIZE_WIDTH 700
-#define SCREEN_SIZE_HEIGHT 400
 
+//------------------------------------------------------------------------------------
+// Program main entry point
+//------------------------------------------------------------------------------------
+int main(void)
+{
+    // Initialization
+    //--------------------------------------------------------------------------------------
+    const int screenWidth = 800;
+    const int screenHeight = 450;
 
-int main(void){
+    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
-    Texture2D sprite;
-    Sound sound;
-    Music music;
+    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    //--------------------------------------------------------------------------------------
 
-    InitWindow(SCREEN_SIZE_WIDTH, SCREEN_SIZE_HEIGHT, "The best Window");
-    InitAudioDevice();
+    // Main game loop
+    while (!WindowShouldClose())    // Detect window close button or ESC key
+    {
+        // Update
+        //----------------------------------------------------------------------------------
+        // TODO: Update your variables here
+        //----------------------------------------------------------------------------------
 
-    sprite = LoadTexture("carita.png");
-    sound = LoadSound("sound.mp3");
-    music = LoadMusicStream("song.mp3");
-    PlayMusicStream(music);
-
-    SetTargetFPS(144);
-
-    float posX = 0;
-    float posY = 0;
-    int rebotarX = 1;
-    int rebotarY = 1;
-
-    while(!WindowShouldClose()) {
-
-        UpdateMusicStream(music);
-
+        // Draw
+        //----------------------------------------------------------------------------------
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
-        DrawTexture(sprite, posX, posY, WHITE);
+
+        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
-
-        posX += GetFrameTime() * 100 * rebotarX;
-        posY += GetFrameTime() * 100 * rebotarY;
-
-        if (posX >= SCREEN_SIZE_WIDTH -16 || posX <= 0){
-            rebotarX *= -1;
-            PlaySound(sound);
-        }
-
-        if (posY >= SCREEN_SIZE_HEIGHT -16 || posY <= 0){
-            rebotarY *= -1;
-            PlaySound(sound);
-        }
-
+        //----------------------------------------------------------------------------------
     }
-    StopMusicStream(music);
-    CloseAudioDevice();
-    CloseWindow();
+
+    // De-Initialization
+    //--------------------------------------------------------------------------------------
+    CloseWindow();        // Close window and OpenGL context
+    //--------------------------------------------------------------------------------------
 
     return 0;
 }
