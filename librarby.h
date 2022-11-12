@@ -2,10 +2,8 @@
 #ifndef GAME_LIBRARBY_H
 #define GAME_LIBRARBY_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "global.h"
 
-typedef struct player Player;
+Rectangle create_hitbox(float x, float y);
 
 #endif //GAME_LIBRARBY_H
