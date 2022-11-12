@@ -4,6 +4,7 @@
 
 #include "global.h"
 
+
 Rectangle create_hitbox(float x, float y);
 
 #endif //GAME_LIBRARBY_H

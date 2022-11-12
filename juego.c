@@ -11,6 +11,7 @@ struct player{
     //Rectangle arma
 };
 
+
 Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
@@ -21,7 +22,7 @@ Player* create_player(){
     return jugador;
 }
 
-//Tanto esta función, como la de abajo podrían combinarse, para dibujar bien el sprite
+//Tanto esta función como la de abajo podrían combinarse, para dibujar bien el sprite
 void draw_player(Player* a){
     DrawRectangleRec(a->hitbox,YELLOW);
 }

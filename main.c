@@ -24,16 +24,16 @@ void fondo() {
 
 int main(void)
 {
-
-    InitWindow(S_WIDHT, S_HEIGHT, "vamos viendo gente");
+    InitWindow(S_WIDHT, S_HEIGHT, "Coconut doggy");
 
     SetTargetFPS(60);           // Poner el juego a 60 frames
-    Player* a = create_player();
+    Player* p = create_player();
 
-    // EL JUEGO
+    // YO SOY EL JUEGO :O
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
     {
-        // Update
+        // cambios
+        move_player(p);
 
 
         BeginDrawing(); //---------------------
@@ -41,9 +41,9 @@ int main(void)
         ClearBackground(RAYWHITE);
 
         fondo();
-        move_player(a);
 
-        draw_player(a);
+
+        draw_player(p);
 
         EndDrawing(); //-----------------------
 
