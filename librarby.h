@@ -4,6 +4,7 @@
 
 #include "global.h"
 
+typedef struct list List;
 
 Rectangle create_hitbox(float x, float y);
 
