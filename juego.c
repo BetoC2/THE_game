@@ -1,6 +1,6 @@
 
 #include "juego.h"
-#include "global.h"
+
 
 struct player{
     Rectangle hitbox;

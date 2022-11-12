@@ -2,9 +2,8 @@
 #ifndef GAME_JUEGO_H
 #define GAME_JUEGO_H
 
-//XD esto es la branch
-
 #include "librarby.h"
+#include "global.h"
 
 Player* create_player();
 void draw_player(Player* a);
