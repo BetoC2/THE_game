@@ -28,6 +28,7 @@ int main(void)
 
     SetTargetFPS(60);           // Poner el juego a 60 frames
     Player* p = create_player();
+    Walls* w = crear_paredes();
 
     // YO SOY EL JUEGO :O
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
@@ -41,8 +42,7 @@ int main(void)
         ClearBackground(RAYWHITE);
 
         fondo();
-
-
+        draw_walls(w);
         draw_player(p);
 
         EndDrawing(); //-----------------------

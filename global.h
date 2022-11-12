@@ -13,6 +13,10 @@
 
 typedef struct player Player;
 typedef struct enemy Enemy;
-typedef struct wall Wall;
+
+typedef struct walls{
+    Rectangle* array;
+    int size;
+}Walls;
 
 #endif //GAME_GLOBAL_H

@@ -5,6 +5,7 @@
 #include "librarby.h"
 #include "global.h"
 
+
 Player* create_player();
 void draw_player(Player* a);
 void move_player(Player* a);

@@ -4,8 +4,10 @@
 
 #include "global.h"
 
-typedef struct list List;
+
 
 Rectangle create_hitbox(float x, float y);
+Walls* crear_paredes();
+void draw_walls(Walls* w);
 
 #endif //GAME_LIBRARBY_H

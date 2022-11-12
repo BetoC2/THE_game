@@ -24,7 +24,7 @@ Player* create_player(){
 
 //Tanto esta función como la de abajo podrían combinarse, para dibujar bien el sprite
 void draw_player(Player* a){
-    DrawRectangleRec(a->hitbox,YELLOW);
+    DrawRectangleRec(a->hitbox,LIGHTGRAY);
 }
 
 void move_player(Player* a){
