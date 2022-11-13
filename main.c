@@ -21,7 +21,6 @@ void fondo() {
 }
 
 
-
 int main(void)
 {
     InitWindow(S_WIDHT, S_HEIGHT, "Coconut doggy");
@@ -33,7 +32,8 @@ int main(void)
     // YO SOY EL JUEGO :O
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
     {
-        // cambios
+        // Cambios
+        chocar_paredes( p, w);
         move_player(p);
 
 
