@@ -26,15 +26,15 @@ int main(void)
     InitWindow(S_WIDHT, S_HEIGHT, "Coconut doggy");
 
     SetTargetFPS(60);           // Poner el juego a 60 frames
-    Player* p = create_player();
-    Walls* w = crear_paredes();
+    Player* jugador = create_player();
+    Walls* paredes = crear_paredes();
 
     // YO SOY EL JUEGO :O
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
     {
         // Cambios
-        chocar_paredes( p, w);
-        move_player(p);
+        chocar_paredes( jugador, paredes);
+        move_player(jugador);
 
 
         BeginDrawing(); //---------------------
@@ -42,8 +42,8 @@ int main(void)
         ClearBackground(RAYWHITE);
 
         fondo();
-        draw_walls(w);
-        draw_player(p);
+        draw_walls(paredes);
+        draw_player(jugador);
 
         EndDrawing(); //-----------------------
 
