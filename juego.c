@@ -36,6 +36,8 @@ void move_player(Player* a){
     if(IsKeyDown(KEY_D) && a->side[0] != 4 && a->side[1] != 4) a->hitbox.x += a->speed;    //Derecha
 }
 
+
+//Se va a modificar cuando se implementen bien las listas
 void chocar_paredes(Player* p, Walls* w){
     float dif_x;
     float dif_y;

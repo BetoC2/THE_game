@@ -1,13 +1,52 @@
 
 #include "librarby.h"
 
+struct list{
+    void** array;
+    int elements;
+    int size;
+};
 
 Rectangle create_hitbox(float x, float y){
     Rectangle r = {x, y, SIZE, SIZE};
     return r;
 };
 
-//Luego lo conectamos con lo procedural pa que sea chido
+List* new_list(){
+    List* l = malloc(sizeof(List));
+    l->elements = 0;
+    l->size = 4;
+    l->array = calloc(l->size, sizeof(void*));
+
+    return l;
+}
+
+void list_add(List* l, void* element){
+    if(l->elements >= l->size){
+        l->size *= 2;
+        l->array = realloc(l->array, sizeof(void*) * l->size);
+    }
+    l->array[l->elements] = element;
+    l->elements++;
+}
+
+void list_delete(List* l, int position){
+    if(l->elements <= 0)
+        return;
+    l->array[position] = l->array[l->elements];
+    l->array[l->elements] = NULL;
+    l->elements--;
+}
+
+int list_size(List* l){
+    return l->elements;
+}
+
+
+
+
+//Está de mientras, listas se están implementando
+
 Walls* crear_paredes(){
     Walls* w = malloc(sizeof(Walls));
     w->size = 12;
@@ -32,6 +71,3 @@ void draw_walls(Walls* w){
         DrawRectangleRec(w->array[i], YELLOW);
     }
 }
-
-//Siempre sí va a ser uno para paredes y otro para enemigos, las paredes con rectangulos basta
-

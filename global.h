@@ -13,8 +13,9 @@
 
 typedef struct player Player;
 typedef struct enemy Enemy;
+typedef struct wall Wall;
 
-typedef struct walls{
+typedef struct walls{ //SE VA A ELIMINAR
     Rectangle* array;
     int size;
 }Walls;
