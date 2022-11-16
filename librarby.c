@@ -32,11 +32,12 @@ void list_add(List* l, void* element){
 }
 
 void list_delete(List* l, int position){
+    l->elements--;
     if(l->elements <= 0)
         return;
     l->array[position] = l->array[l->elements];
     l->array[l->elements] = NULL;
-    l->elements--;
+
 }
 
 void* list_get(List* l, int position){

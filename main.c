@@ -29,12 +29,22 @@ int main(void)
     Player* jugador = create_player();
     List * paredes = (crate_walls());
 
+    int xd = 0;     //XD, luego se quita
+
+
     // YO SOY EL JUEGO :O
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
     {
         // Cambios
+        xd ++;          //Probando cosas que ocupan tiempo y delete
+        if(xd == 300)
+            list_delete(paredes, 5);
+
+
         chocar_paredes( jugador, paredes);
         move_player(jugador);
+
+
 
 
         BeginDrawing(); //---------------------
