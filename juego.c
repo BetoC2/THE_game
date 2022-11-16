@@ -65,38 +65,29 @@ void draw_walls(List* l){
 
 }
 
+void chocar_paredes(Player* p, List * w) {
 
-
-/*
-//Se va a modificar cuando se implementen bien las listas
-void chocar_paredes(Player* p, Walls* w){
-    float dif_x;
-    float dif_y;
     int side;
 
-    for(int i = 0; i < w->size; i++){
+    for (int i = 0; i < list_size(w); i++) {
 
-        if(CheckCollisionRecs(p->hitbox,w->array[i])) {
-            DrawRectangle(50, 30, 250, 250, ORANGE);
-
-            dif_x = p->hitbox.x - w->array[i].x;
-            dif_x = dif_x < 0? dif_x * -1: dif_x;
-            dif_y= p->hitbox.y - w->array[i].y;
-            dif_y = dif_y < 0? dif_y * -1: dif_y;
-
-            if (dif_x < SIZE && dif_x <= dif_y)
-                side = (p->hitbox.y - w->array[i].y) < 0? 1: 3;
-            else if (dif_y < SIZE && dif_x >= dif_y)
-                side = (p->hitbox.x - w->array[i].x) < 0? 4: 2;
-
-        }
-        else
+        Wall *curr = list_get(w, i);
+        if (!CheckCollisionRecs(p->hitbox, curr->hitbox))
             continue;
 
-        if(p->side[0] == 0)
+        float dif_x = p->hitbox.x - curr->hitbox.x;
+        dif_x = dif_x < 0 ? dif_x * -1 : dif_x;
+        float dif_y = p->hitbox.y - curr->hitbox.y;
+        dif_y = dif_y < 0 ? dif_y * -1 : dif_y;
+
+        if (dif_x < SIZE && dif_x <= dif_y)
+            side = (p->hitbox.y - curr->hitbox.y) < 0 ? 1 : 3;
+        else if (dif_y < SIZE && dif_x >= dif_y)
+            side = (p->hitbox.x - curr->hitbox.x) < 0 ? 4 : 2;
+
+        if (p->side[0] == 0)
             p->side[0] = side;
         else
             p->side[1] = side;
     }
 }
- */

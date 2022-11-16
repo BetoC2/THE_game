@@ -18,5 +18,4 @@ void* list_get(List* l, int position);
 int list_size(List* l);
 
 
-
 #endif //GAME_LIBRARBY_H

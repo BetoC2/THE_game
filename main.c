@@ -33,7 +33,7 @@ int main(void)
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
     {
         // Cambios
-        //chocar_paredes( jugador, paredes);
+        chocar_paredes( jugador, paredes);
         move_player(jugador);
 
 
