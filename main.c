@@ -27,23 +27,25 @@ int main(void)
 
     SetTargetFPS(60);           // Poner el juego a 60 frames
     Player* jugador = create_player();
-    Walls* paredes = crear_paredes();
+    List * paredes = (crate_walls());
 
     // YO SOY EL JUEGO :O
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
     {
         // Cambios
-        chocar_paredes( jugador, paredes);
+        //chocar_paredes( jugador, paredes);
         move_player(jugador);
 
 
         BeginDrawing(); //---------------------
+
 
         ClearBackground(RAYWHITE);
 
         fondo();
         draw_walls(paredes);
         draw_player(jugador);
+
 
         EndDrawing(); //-----------------------
 

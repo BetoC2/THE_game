@@ -1,7 +1,7 @@
 
 #include "juego.h"
 
-
+//Estructuras
 struct player{
     Rectangle hitbox;
     int vidas;
@@ -11,7 +11,12 @@ struct player{
     //Rectangle arma
 };
 
+struct wall{
+    Rectangle hitbox;
+    //Sprite ??
+};
 
+// JUGADOR
 Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
@@ -37,6 +42,32 @@ void move_player(Player* a){
 }
 
 
+//PAREDES
+List* crate_walls(){
+    List* l  = new_list();
+
+    float mien_x[11] = {2,2,2,3,8,9,10,10,8,10,12};
+    float mien_y[11] = {6,7,8,2,1,1,2,3,5,7,7};
+
+    for(int i = 0; i < 11; i++){
+        Wall* a = malloc(sizeof(Wall));
+        a->hitbox = create_hitbox(mien_x[i]*SIZE, mien_y[i]*SIZE);
+        list_add(l, a);
+    }
+    return l;
+}
+
+void draw_walls(List* l){
+    for(int i = 0; i < list_size(l); i++){
+        Wall* w = list_get(l, i);
+        DrawRectangleRec(w->hitbox,YELLOW);
+    }
+
+}
+
+
+
+/*
 //Se va a modificar cuando se implementen bien las listas
 void chocar_paredes(Player* p, Walls* w){
     float dif_x;
@@ -68,3 +99,4 @@ void chocar_paredes(Player* p, Walls* w){
             p->side[1] = side;
     }
 }
+ */
