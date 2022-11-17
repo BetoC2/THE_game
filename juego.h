@@ -15,4 +15,7 @@ List* crate_walls();
 void draw_walls(List* l);
 void chocar_paredes(Player* p, List* w);
 
+//ENEMIGOS
+
+
 #endif //GAME_JUEGO_H

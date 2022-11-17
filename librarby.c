@@ -12,6 +12,14 @@ Rectangle create_hitbox(float x, float y){
     return r;
 };
 
+float diferencia(float num_1, float num_2){
+    float dif = num_1 - num_2;
+    dif = dif < 0? dif * -1: dif;
+    return dif;
+}
+
+
+
 
 List* new_list(){
     List* l = malloc(sizeof(List));
@@ -46,4 +54,19 @@ void* list_get(List* l, int position){
 
 int list_size(List* l){
     return l->elements;
+}
+
+void* list_pop(List* l){
+    if(l->elements <= 0)
+        return NULL;
+    l->elements--;
+    void* a = l->array[l->elements];
+    l->array[l->elements] = NULL;
+    return a;
+}
+
+void* list_peek(List* l){
+    if(l->elements <= 0)
+        return NULL;
+    return l->array[l->elements-1];
 }
