@@ -151,6 +151,7 @@ void move_enemies(Player* p, List* l){
     for(int i = 0; i < list_size(l); i++){
 
         Enemy* e = list_get(l,i);
+        // Podemos usar un estado (tranquilo/ agresivo) o un radio mayor en un futuro
         if(distance(p->hitbox, e->hitbox) > (e->vision + 1) * SIZE)
             continue;   //Movimiento natural
 
