@@ -20,10 +20,11 @@ float diferencia(float num_1, float num_2){
 
 double distance(Rectangle point_1, Rectangle point_2){
     double cc_adyacente = pow(point_1.x - point_2.x, 2);
-    double cc_opuesto = pow(point_1.x - point_2.x, 2);
+    double cc_opuesto = pow(point_1.y - point_2.y, 2);
 
     return sqrt( cc_adyacente + cc_opuesto );
 }
+
 
 
 

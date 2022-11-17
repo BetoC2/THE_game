@@ -40,6 +40,7 @@ int main(void)
         // Cambios
         chocar_paredes( jugador, paredes);
         move_player(jugador);
+        move_enemies(jugador, enemigos);
 
 
         BeginDrawing(); //---------------------

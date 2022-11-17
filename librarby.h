@@ -10,6 +10,7 @@ typedef struct list List;
 //Para simplificar
 Rectangle create_hitbox(float x, float y);
 float diferencia(float num_1, float num_2);
+double distance(Rectangle point_1, Rectangle point_2);
 
 //Funciones listas
 List* new_list();

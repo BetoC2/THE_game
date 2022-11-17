@@ -3,25 +3,26 @@
 
 //Estructuras
 struct player{
-    Rectangle hitbox;
-    int vida;
-    int side[2];
-    float speed;
+    Rectangle hitbox;   // Ubicación y colisión
+    int vida;           // Vida en medios corazones
+    int side[2];        // Posiciones a donde no avanzar (para paredes)
+    float speed;        // Velocidad (pixeles x frames)
     //sprite
     //Rectangle arma
 };
 
 struct wall{
-    Rectangle hitbox;
-    //Sprite ??
+    Rectangle hitbox;   // Posición y zona de colisión
+    //Sprite ??         // Futuro sprite
 };
 
 struct enemy{
-    Rectangle hitbox;
-    int type;
-    int vida;
-    float speed;
-    //sprite
+    Rectangle hitbox;   // Posición y zona de choque
+    int type;           // Tipo de enemigo
+    int vida;           // Cantidad de vida
+    float speed;        // Velocidad (Pixeles x frame)
+    float vision;       // Distancia (en tiles) de seguimiento
+    //sprite            // Futuro sprite
 };
 
 // JUGADOR
@@ -105,13 +106,17 @@ void asign_stats(Enemy* e){
         case 1:
             e->vida = 4;
             e->speed = 2.75f;
+            e->vision = 2;
             break;
         case 2:
             e->vida = 10;
             e->speed = 1;
+            e->vision = 3;
+            break;
         default:
             e->vida = 1;
             e->speed = 0.5f;
+            e->vision = 0.5f;
     }
 }
 
@@ -129,7 +134,7 @@ List* summon_enemies(){
         list_add(l,e);
     }
     return l;
-}   //A cambiar
+}
 
 void draw_enemies(List* l){
     for (int i = 0; i < list_size(l); ++i) {
@@ -142,5 +147,28 @@ void draw_enemies(List* l){
 }
 
 void move_enemies(Player* p, List* l){
+
+    for(int i = 0; i < list_size(l); i++){
+
+        Enemy* e = list_get(l,i);
+        if(distance(p->hitbox, e->hitbox) > (e->vision + 1) * SIZE)
+            continue;   //Movimiento natural
+
+        //Movimiento atacando
+        float movement_x = p->hitbox.x - e->hitbox.x;
+        float movement_y = p->hitbox.y - e->hitbox.y;
+
+        int dir_x = movement_x > 0? 1: -1;
+        int dir_y = movement_y > 0? 1: -1;
+
+        float total = (movement_x * dir_x) + (movement_y * dir_y);
+
+        movement_x = movement_x / total * e->speed;
+        movement_y = movement_y / total * e->speed;
+
+        e->hitbox.x += movement_x;
+        e->hitbox.y += movement_y;
+
+    }
 
 }
