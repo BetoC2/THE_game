@@ -80,9 +80,9 @@ void chocar_paredes(Player* p, List* w) {
         float dif_y = diferencia(p->hitbox.y, curr->hitbox.y);
 
 
-        if (dif_x < SIZE+4 && dif_x <= dif_y)
+        if (dif_x < SIZE && dif_x <= dif_y)
             side = (p->hitbox.y - curr->hitbox.y) < 0 ? 1 : 3;
-        else if (dif_y < SIZE+4 && dif_x >= dif_y)
+        else if (dif_y < SIZE && dif_x >= dif_y)
             side = (p->hitbox.x - curr->hitbox.x) < 0 ? 4 : 2;
 
         if (p->side[0] == 0)
