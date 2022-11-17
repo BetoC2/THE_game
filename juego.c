@@ -104,14 +104,14 @@ void asign_stats(Enemy* e){
     switch (e->type) {
         case 1:
             e->vida = 4;
-            e->speed = 2.75;
+            e->speed = 2.75f;
             break;
         case 2:
             e->vida = 10;
             e->speed = 1;
         default:
             e->vida = 1;
-            e->speed = 0.5;
+            e->speed = 0.5f;
     }
 }
 

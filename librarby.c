@@ -18,9 +18,17 @@ float diferencia(float num_1, float num_2){
     return dif;
 }
 
+double distance(Rectangle point_1, Rectangle point_2){
+    double cc_adyacente = pow(point_1.x - point_2.x, 2);
+    double cc_opuesto = pow(point_1.x - point_2.x, 2);
+
+    return sqrt( cc_adyacente + cc_opuesto );
+}
 
 
 
+
+// LISTAS
 List* new_list(){
     List* l = malloc(sizeof(List));
     l->elements = 0;
