@@ -16,6 +16,8 @@ void draw_walls(List* l);
 void chocar_paredes(Player* p, List* w);
 
 //ENEMIGOS
-
+List* summon_enemies();
+void draw_enemies(List* l);
+void move_enemies(Player* p, List* l);
 
 #endif //GAME_JUEGO_H

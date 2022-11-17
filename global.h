@@ -19,4 +19,5 @@ typedef struct enemy Enemy;
 typedef struct wall Wall;
 
 
+
 #endif //GAME_GLOBAL_H

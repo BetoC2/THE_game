@@ -4,7 +4,7 @@
 //Estructuras
 struct player{
     Rectangle hitbox;
-    int vidas;
+    int vida;
     int side[2];
     float speed;
     //sprite
@@ -16,18 +16,25 @@ struct wall{
     //Sprite ??
 };
 
+struct enemy{
+    Rectangle hitbox;
+    int type;
+    int vida;
+    float speed;
+    //sprite
+};
+
 // JUGADOR
 Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
-    jugador->vidas = 3;
-    jugador->speed = 3.5;
+    jugador->vida = 3;
+    jugador->speed = 4;
     jugador->side[0] = 0;
     jugador->side[1] = 0;
     return jugador;
 }
 
-//Tanto esta función como la de abajo podrían combinarse, para dibujar bien el sprite
 void draw_player(Player* a){
     DrawRectangleRec(a->hitbox,LIGHTGRAY);
     a->side[0] = 0;
@@ -55,7 +62,7 @@ List* crate_walls(){
         list_add(l, a);
     }
     return l;
-}
+}   //A cambiar
 
 void draw_walls(List* l){
     for(int i = 0; i < list_size(l); i++){
@@ -89,4 +96,51 @@ void chocar_paredes(Player* p, List* w) {
         else
             p->side[1] = side;
     }
+}
+
+
+//ENEMIGOS
+void asign_stats(Enemy* e){
+    switch (e->type) {
+        case 1:
+            e->vida = 4;
+            e->speed = 2.75;
+            break;
+        case 2:
+            e->vida = 10;
+            e->speed = 1;
+        default:
+            e->vida = 1;
+            e->speed = 0.5;
+    }
+}
+
+List* summon_enemies(){
+    List* l = new_list();
+
+    float mien_x[2] = {14, 0};
+    float mien_y[2] = {1, 9};
+
+    for(int i = 0; i < 2; i++){
+        Enemy* e = malloc(sizeof(Enemy));
+        e->type = rand()%2 + 1;
+        e->hitbox = create_hitbox(mien_x[i] * SIZE, mien_y[i] * SIZE);
+        asign_stats(e);
+        list_add(l,e);
+    }
+    return l;
+}   //A cambiar
+
+void draw_enemies(List* l){
+    for (int i = 0; i < list_size(l); ++i) {
+        Enemy* e = list_get(l, i);
+        Color c = e->type == 1? BLUE: RED;
+        DrawRectangleRec(e->hitbox, c);
+
+    }
+
+}
+
+void move_enemies(Player* p, List* l){
+
 }
