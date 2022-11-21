@@ -13,11 +13,14 @@
 #define S_WIDHT 1024
 #define S_HEIGHT 640
 #define SIZE 64
+#define FPS 60
 
 //Estrcuturas existentes
 typedef struct player Player;
 typedef struct enemy Enemy;
 typedef struct wall Wall;
+
+typedef struct list List;
 
 
 

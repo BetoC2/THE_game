@@ -2,7 +2,6 @@
 #ifndef GAME_JUEGO_H
 #define GAME_JUEGO_H
 
-#include "librarby.h"
 #include "global.h"
 
 // JUGADOR

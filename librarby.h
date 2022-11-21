@@ -4,9 +4,6 @@
 
 #include "global.h"
 
-//Estructuras
-typedef struct list List;
-
 //Para simplificar
 Rectangle create_hitbox(float x, float y);
 Rectangle hitbox_arma(int lado, float x, float y);

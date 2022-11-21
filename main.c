@@ -26,7 +26,7 @@ int main(void)
     InitWindow(S_WIDHT, S_HEIGHT, "Coconut doggy");
 
     srand(time(NULL));
-    SetTargetFPS(60);           // Poner el juego a 60 frames
+    SetTargetFPS(FPS);           // Poner el juego a 60 frames
 
     Player* jugador = create_player();
     List* paredes = crate_walls();

@@ -1,5 +1,6 @@
 
 #include "juego.h"
+#include "librarby.h"
 
 //Estructuras
 struct player{
@@ -45,9 +46,12 @@ Player* create_player(){
 }
 
 void draw_player(Player* p){
+    DrawRectangleRec(p->arma, ORANGE);
     DrawRectangleRec(p->hitbox,LIGHTGRAY);
+    Color c;
 }
 
+    //cosas de manage
 void move_player(Player* p){
     if(IsKeyDown(KEY_W) && p->side[0] != 3 && p->side[1] != 3) p->hitbox.y -= p->speed;    //Arriba
     if(IsKeyDown(KEY_S) && p->side[0] != 1 && p->side[1] != 1) p->hitbox.y += p->speed;    //Abajo
@@ -55,15 +59,22 @@ void move_player(Player* p){
     if(IsKeyDown(KEY_D) && p->side[0] != 4 && p->side[1] != 4) p->hitbox.x += p->speed;    //Derecha
 }
 
-void lado_player(Player* p){
+void lado_player(Player* p){    //Necesita afinación, pero funciona
+    if(IsKeyDown(KEY_W)) p->facing = 1;
+    if(IsKeyDown(KEY_S)) p->facing = 3;
+    if(IsKeyDown(KEY_D)) p->facing = 2;
+    if(IsKeyDown(KEY_A)) p->facing = 4;
+
 
 }
 
 void manage_player(Player* p){
 
+    lado_player(p);
     move_player(p);
-    //Función para decir a que lado anda viendo
     p->arma = hitbox_arma(p->facing, p->hitbox.x, p->hitbox.y);
+
+
     p->side[0] = 0;
     p->side[1] = 0;
 
