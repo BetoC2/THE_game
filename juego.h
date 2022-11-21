@@ -8,7 +8,7 @@
 // JUGADOR
 Player* create_player();
 void draw_player(Player* a);
-void move_player(Player* a);
+void manage_player(Player* p);
 
 //PAREDES
 List* crate_walls();
@@ -18,6 +18,6 @@ void chocar_paredes(Player* p, List* w);
 //ENEMIGOS
 List* summon_enemies();
 void draw_enemies(List* l);
-void move_enemies(Player* p, List* l);
+void manage_enemies(Player* p, List* l);
 
 #endif //GAME_JUEGO_H
