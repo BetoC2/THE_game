@@ -12,6 +12,25 @@ Rectangle create_hitbox(float x, float y){
     return r;
 };
 
+Rectangle hitbox_arma(int lado, float x, float y){
+    Rectangle r = {1,1,1,1};
+
+    if(lado%2){
+        r.width = SIZE * 2.0;
+        r.height = SIZE * 1.5;
+        r.x = x - SIZE / 2.0;
+        r.y = lado == 3? y + SIZE / 2.0: y - SIZE / 2.0;
+    }
+    else{
+        r.width = SIZE * 1.5;
+        r.height = SIZE * 2.0;
+        r.y = y - SIZE / 2.0;
+        r.x = lado == 2? x + SIZE / 2.0: x - SIZE / 2.0;
+    }
+
+    return r;
+}
+
 float diferencia(float num_1, float num_2){
     float dif = num_1 - num_2;
     dif = dif < 0? dif * -1: dif;

@@ -4,11 +4,14 @@
 //Estructuras
 struct player{
     Rectangle hitbox;   // Ubicación y colisión
-    Rectangle arma;
+    Rectangle arma;     // hitbox del ataque
     int vida;           // Vida en medios corazones
     int side[2];        // Posiciones a donde no avanzar (para paredes)
     float speed;        // Velocidad (pixeles x frames)
-    int timer[2];
+    int facing;         // 1 arriba, 2 derecha, 3 abajo, 4 izquierda
+    int state;          // Atacando o no, 0 y 1
+    int timer_damage;
+    int timer_atack;
     //sprite
 };
 
@@ -30,32 +33,40 @@ struct enemy{
 Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
-    jugador->arma = (Rectangle){-1000,-1000,SIZE * 1.5, SIZE * 2};
     jugador->vida = 3;
     jugador->speed = 4;
     jugador->side[0] = 0;
     jugador->side[1] = 0;
-    jugador->timer[0] = 0;
-    jugador->timer[1] = 0;
+    jugador->timer_atack = 0;
+    jugador->timer_damage = 0;
+    jugador->facing = 3;
+    jugador->arma = hitbox_arma(jugador->facing, jugador->hitbox.x, jugador->hitbox.y);
     return jugador;
 }
 
-void draw_player(Player* a){
-    DrawRectangleRec(a->hitbox,LIGHTGRAY);
-    a->side[0] = 0;
-    a->side[1] = 0;
+void draw_player(Player* p){
+    DrawRectangleRec(p->hitbox,LIGHTGRAY);
 }
 
-void move_player(Player* a){
-    if(IsKeyDown(KEY_W) && a->side[0] != 3 && a->side[1] != 3) a->hitbox.y -= a->speed;    //Arriba
-    if(IsKeyDown(KEY_S) && a->side[0] != 1 && a->side[1] != 1) a->hitbox.y += a->speed;    //Abajo
-    if(IsKeyDown(KEY_A) && a->side[0] != 2 && a->side[1] != 2) a->hitbox.x -= a->speed;    //Izquierda
-    if(IsKeyDown(KEY_D) && a->side[0] != 4 && a->side[1] != 4) a->hitbox.x += a->speed;    //Derecha
+void move_player(Player* p){
+    if(IsKeyDown(KEY_W) && p->side[0] != 3 && p->side[1] != 3) p->hitbox.y -= p->speed;    //Arriba
+    if(IsKeyDown(KEY_S) && p->side[0] != 1 && p->side[1] != 1) p->hitbox.y += p->speed;    //Abajo
+    if(IsKeyDown(KEY_A) && p->side[0] != 2 && p->side[1] != 2) p->hitbox.x -= p->speed;    //Izquierda
+    if(IsKeyDown(KEY_D) && p->side[0] != 4 && p->side[1] != 4) p->hitbox.x += p->speed;    //Derecha
+}
+
+void lado_player(Player* p){
+
 }
 
 void manage_player(Player* p){
 
     move_player(p);
+    //Función para decir a que lado anda viendo
+    p->arma = hitbox_arma(p->facing, p->hitbox.x, p->hitbox.y);
+    p->side[0] = 0;
+    p->side[1] = 0;
+
 }
 
 
@@ -67,12 +78,12 @@ List* crate_walls(){
     float mien_y[11] = {6,7,8,2,1,1,2,3,5,7,7};
 
     for(int i = 0; i < 11; i++){
-        Wall* a = malloc(sizeof(Wall));
-        a->hitbox = create_hitbox(mien_x[i]*SIZE, mien_y[i]*SIZE);
-        list_add(l, a);
+        Wall* w = malloc(sizeof(Wall));
+        w->hitbox = create_hitbox(mien_x[i]*SIZE, mien_y[i]*SIZE);
+        list_add(l, w);
     }
     return l;
-}   //A cambiar
+}   //ESTO USA LA MATRIZ POR GENERACIÓN DE BETO
 
 void draw_walls(List* l){
     for(int i = 0; i < list_size(l); i++){
@@ -152,7 +163,6 @@ void draw_enemies(List* l){
         DrawRectangleRec(e->hitbox, c);
 
     }
-
 }
 
 void move_enemies(Player* p, Enemy* e){
@@ -162,7 +172,7 @@ void move_enemies(Player* p, Enemy* e){
         return;   //Movimiento natural
     }
 
-    // Movimiento atacando
+    // Movimiento atacando estandar
     float movement_x = p->hitbox.x - e->hitbox.x;
     float movement_y = p->hitbox.y - e->hitbox.y;
     int dir_x = movement_x > 0? 1: -1;
@@ -185,7 +195,5 @@ void manage_enemies(Player* p, List* l){
 
         //Funciones a usar
         move_enemies(p, e);
-
     }
-
 }

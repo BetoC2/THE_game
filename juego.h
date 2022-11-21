@@ -7,7 +7,7 @@
 
 // JUGADOR
 Player* create_player();
-void draw_player(Player* a);
+void draw_player(Player* p);
 void manage_player(Player* p);
 
 //PAREDES
