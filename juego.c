@@ -9,6 +9,7 @@ struct player{
     int vida;           // Vida en medios corazones
     int side[2];        // Posiciones a donde no avanzar (para paredes)
     float speed;        // Velocidad (pixeles x frames)
+    int damage;
     int facing;         // 1 arriba, 2 derecha, 3 abajo, 4 izquierda
     int state;          // Atacando o no, 0 y 1
     int timer_damage;
@@ -26,6 +27,7 @@ struct enemy{
     int type;           // Tipo de enemigo
     int vida;           // Cantidad de vida
     float speed;        // Velocidad (Pixeles x frame)
+    int damage;
     float vision;       // Distancia (en tiles) de seguimiento
     int timer;          //Evita recibir mucho daño
     //sprite            // Futuro sprite
@@ -36,8 +38,9 @@ struct enemy{
 Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
-    jugador->vida = 5;
+    jugador->vida = 10;
     jugador->speed = 4;
+    jugador->damage = 1;
     jugador->side[0] = 0;
     jugador->side[1] = 0;
     jugador->timer_atack = 0;
@@ -50,7 +53,9 @@ Player* create_player(){
 void draw_player(Player* p){
     if(p->timer_atack > FPS)
         DrawRectangleRec(p->arma, ORANGE);
-    DrawRectangleRec(p->hitbox,LIGHTGRAY);
+
+    if(p->timer_damage % 16 > 8 || p->timer_damage < 16)
+        DrawRectangleRec(p->hitbox,LIGHTGRAY);
 
     for(int i = 0; i < p->vida; i++)
         DrawCircle(40*(i+1), 20, 15, RED);
@@ -149,19 +154,22 @@ void chocar_paredes(Player* p, List* w) {
 //ENEMIGOS
 void asign_stats(Enemy* e){
     switch (e->type) {
-        case 1:
+        case 1: //Pequeño y rápido
             e->vida = 4;
             e->speed = 2.75f;
-            e->vision = 3;
+            e->damage = 1;
+            e->vision = 3.5f;
             break;
-        case 2:
+        case 2: //Tanque
             e->vida = 10;
             e->speed = 1;
-            e->vision = 4;
+            e->damage = 2;
+            e->vision = 6;
             break;
-        default:
+        default:    //Por defecto e inutil XD
             e->vida = 1;
             e->speed = 0.5f;
+            e->damage = 0;
             e->vision = 0.5f;
     }
 }
@@ -187,8 +195,9 @@ void draw_enemies(List* l){
     for (int i = 0; i < list_size(l); ++i) {
         Enemy* e = list_get(l, i);
         Color c = e->type == 1? BLUE: RED;
-        DrawRectangleRec(e->hitbox, c);
 
+        if(e->timer % 16 > 8 || e->timer < 16)
+            DrawRectangleRec(e->hitbox, c);
     }
 }      //ESTO SE VA A CAMBIAR
 
@@ -221,15 +230,15 @@ void lastimar_atacar(Player* p, Enemy* e){
     // Daño a enemigo
     if(CheckCollisionRecs(p->arma, e->hitbox) && !e->timer && p->timer_atack > FPS) {
         e->timer = FPS * 1.5;
-        e->vida--;
+        e->vida -= p->damage;
     }
     if(e->timer)
         e->timer--;
 
     // Daño a jugador
     if(CheckCollisionRecs(p->hitbox, e->hitbox) && !p->timer_damage){
-        p->vida--;
         p->timer_damage = FPS * 1.5;
+        p->vida -= e->damage;
     }
     if(p->timer_damage)
         p->timer_damage--;
