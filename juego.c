@@ -27,8 +27,10 @@ struct enemy{
     int vida;           // Cantidad de vida
     float speed;        // Velocidad (Pixeles x frame)
     float vision;       // Distancia (en tiles) de seguimiento
+    int timer;          //Evita recibir mucho daño
     //sprite            // Futuro sprite
 };
+
 
 // JUGADOR
 Player* create_player(){
@@ -46,10 +48,11 @@ Player* create_player(){
 }
 
 void draw_player(Player* p){
-    DrawRectangleRec(p->arma, ORANGE);
+    if(p->timer_atack > FPS)
+        DrawRectangleRec(p->arma, ORANGE);
     DrawRectangleRec(p->hitbox,LIGHTGRAY);
-    Color c;
-}
+
+}   //ESTO SE VA A CAMBIAR
 
     //cosas de manage
 void move_player(Player* p){
@@ -68,16 +71,24 @@ void lado_player(Player* p){    //Necesita afinación, pero funciona
 
 }
 
+void ataque_player(Player* p){
+    if(IsKeyPressed(KEY_SPACE) && !p->timer_atack){
+        p->timer_atack = FPS * 1.5;
+    }
+    if(p->timer_atack)
+        p->timer_atack--;
+}
+
 void manage_player(Player* p){
 
-    lado_player(p);
     move_player(p);
-    p->arma = hitbox_arma(p->facing, p->hitbox.x, p->hitbox.y);
+    lado_player(p);
 
+    p->arma = hitbox_arma(p->facing, p->hitbox.x, p->hitbox.y);
+    ataque_player(p);
 
     p->side[0] = 0;
     p->side[1] = 0;
-
 }
 
 
@@ -104,6 +115,7 @@ void draw_walls(List* l){
 
 }
 
+    //cosas de manage
 void chocar_paredes(Player* p, List* w) {
 
     int side;
@@ -128,7 +140,7 @@ void chocar_paredes(Player* p, List* w) {
         else
             p->side[1] = side;
     }
-}
+}   //ESTO SE VA A CAMBIAR
 
 
 //ENEMIGOS
@@ -161,11 +173,12 @@ List* summon_enemies(){
         Enemy* e = malloc(sizeof(Enemy));
         e->type = rand()%2 + 1;
         e->hitbox = create_hitbox(mien_x[i] * SIZE, mien_y[i] * SIZE);
+        e->timer = 0;
         asign_stats(e);
         list_add(l,e);
     }
     return l;
-}
+}   //ESTO SE VA A CAMBIAR
 
 void draw_enemies(List* l){
     for (int i = 0; i < list_size(l); ++i) {
@@ -174,8 +187,9 @@ void draw_enemies(List* l){
         DrawRectangleRec(e->hitbox, c);
 
     }
-}
+}      //ESTO SE VA A CAMBIAR
 
+    //cosas de manage
 void move_enemies(Player* p, Enemy* e){
 
     // Podemos usar un estado (tranquilo/ agresivo) o un radio mayor en un futuro
@@ -199,12 +213,29 @@ void move_enemies(Player* p, Enemy* e){
 
 }
 
+void lastimar_enemie(Player* p, Enemy* e){
+    if(CheckCollisionRecs(p->arma, e->hitbox) && !e->timer && p->timer_atack > FPS) {
+        e->timer = FPS * 1.5;
+        e->vida--;
+    }
+    if(e->timer)
+        e->timer--;
+}
+
+int kill_enemie(Enemy* e){
+    if(e->vida <= 0)
+        return 1;
+    return 0;
+}
+
 void manage_enemies(Player* p, List* l){
 
     for(int i = 0; i < list_size(l); i++){
         Enemy* e = list_get(l,i);
 
-        //Funciones a usar
         move_enemies(p, e);
+        lastimar_enemie(p, e);
+        if(kill_enemie(e))
+            list_delete(l,i);
     }
 }
