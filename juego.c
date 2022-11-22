@@ -36,7 +36,7 @@ struct enemy{
 Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
-    jugador->vida = 3;
+    jugador->vida = 5;
     jugador->speed = 4;
     jugador->side[0] = 0;
     jugador->side[1] = 0;
@@ -52,6 +52,9 @@ void draw_player(Player* p){
         DrawRectangleRec(p->arma, ORANGE);
     DrawRectangleRec(p->hitbox,LIGHTGRAY);
 
+    for(int i = 0; i < p->vida; i++)
+        DrawCircle(40*(i+1), 20, 15, RED);
+
 }   //ESTO SE VA A CAMBIAR
 
     //cosas de manage
@@ -60,15 +63,11 @@ void move_player(Player* p){
     if(IsKeyDown(KEY_S) && p->side[0] != 1 && p->side[1] != 1) p->hitbox.y += p->speed;    //Abajo
     if(IsKeyDown(KEY_A) && p->side[0] != 2 && p->side[1] != 2) p->hitbox.x -= p->speed;    //Izquierda
     if(IsKeyDown(KEY_D) && p->side[0] != 4 && p->side[1] != 4) p->hitbox.x += p->speed;    //Derecha
-}
 
-void lado_player(Player* p){    //Necesita afinación, pero funciona
     if(IsKeyDown(KEY_W)) p->facing = 1;
     if(IsKeyDown(KEY_S)) p->facing = 3;
     if(IsKeyDown(KEY_D)) p->facing = 2;
     if(IsKeyDown(KEY_A)) p->facing = 4;
-
-
 }
 
 void ataque_player(Player* p){
@@ -79,16 +78,20 @@ void ataque_player(Player* p){
         p->timer_atack--;
 }
 
-void manage_player(Player* p){
+int manage_player(Player* p){
 
     move_player(p);
-    lado_player(p);
 
     p->arma = hitbox_arma(p->facing, p->hitbox.x, p->hitbox.y);
     ataque_player(p);
 
     p->side[0] = 0;
     p->side[1] = 0;
+
+    if(p->vida<=0)
+        return 1;
+    else
+        return 0;
 }
 
 
@@ -213,19 +216,23 @@ void move_enemies(Player* p, Enemy* e){
 
 }
 
-void lastimar_enemie(Player* p, Enemy* e){
+void lastimar_atacar(Player* p, Enemy* e){
+
+    // Daño a enemigo
     if(CheckCollisionRecs(p->arma, e->hitbox) && !e->timer && p->timer_atack > FPS) {
         e->timer = FPS * 1.5;
         e->vida--;
     }
     if(e->timer)
         e->timer--;
-}
 
-int kill_enemie(Enemy* e){
-    if(e->vida <= 0)
-        return 1;
-    return 0;
+    // Daño a jugador
+    if(CheckCollisionRecs(p->hitbox, e->hitbox) && !p->timer_damage){
+        p->vida--;
+        p->timer_damage = FPS * 1.5;
+    }
+    if(p->timer_damage)
+        p->timer_damage--;
 }
 
 void manage_enemies(Player* p, List* l){
@@ -234,8 +241,9 @@ void manage_enemies(Player* p, List* l){
         Enemy* e = list_get(l,i);
 
         move_enemies(p, e);
-        lastimar_enemie(p, e);
-        if(kill_enemie(e))
+        lastimar_atacar(p, e);
+
+        if(e->vida<=0)
             list_delete(l,i);
     }
 }

@@ -39,7 +39,8 @@ int main(void)
 
         // Cambios
         chocar_paredes( jugador, paredes);
-        manage_player(jugador);
+        if(manage_player(jugador))
+            break;
         manage_enemies(jugador, enemigos);
 
 
@@ -59,6 +60,10 @@ int main(void)
     }
 
     CloseWindow();
+    if(rand()%2)
+        OpenURL("https://www.youtube.com/watch?v=RmUWWVZw28E");
+    else
+        OpenURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 
     return 0;
 }
