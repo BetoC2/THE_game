@@ -92,7 +92,7 @@ Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
     jugador->vida = 5;
-    jugador->speed = 4 * 60 / SIZE;
+    jugador->speed = velocidad(3.5f);
     jugador->damage = 1;
     jugador->side[0] = 0;
     jugador->side[1] = 0;
@@ -155,14 +155,14 @@ void use_awas(Player* p){
         p->timer_atack += FPS / 2;
 
         if(a->sabor == 1)
-            p->vida += 2;
+            p->vida += 3;
 
         if(a->sabor == 2){
-            p->speed += 1.5f;
+            p->speed += velocidad(2.5f);
             p->timer_awas += FPS * 6;
         }
         if(a->sabor == 3){
-            p->damage += 1;
+            p->damage += 2;
             p->timer_awas += FPS * 5;
         }
     }
@@ -171,7 +171,7 @@ void use_awas(Player* p){
         p->timer_awas--;
         if(!p->timer_awas){
             p->damage = 1;
-            p->speed = 4;
+            p->speed = velocidad(3.5f);
         }
     }
 }
@@ -242,7 +242,7 @@ void chocar_paredes(Player* p, List* w) {
         else
             p->side[1] = side;
     }
-}   //ESTO SE VA A CAMBIAR
+}
 
 
 //ENEMIGOS
@@ -250,19 +250,19 @@ void asign_stats(Enemy* e){
     switch (e->type) {
         case 1: //Pequeño y rápido
             e->vida = 4;
-            e->speed = 2.75f;
+            e->speed = velocidad(2.75f);
             e->damage = 1;
             e->vision = 3.5f;
             break;
         case 2: //Tanque
             e->vida = 10;
-            e->speed = 1;
+            e->speed = velocidad(1);
             e->damage = 2;
             e->vision = 6;
             break;
         default:    //Por defecto e inutil XD
             e->vida = 1;
-            e->speed = 0.5f;
+            e->speed = velocidad(0.5f);
             e->damage = 0;
             e->vision = 0.5f;
     }

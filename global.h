@@ -12,7 +12,7 @@
 //Constantes
 #define S_WIDHT 1024
 #define S_HEIGHT 640
-#define SIZE 64
+#define SIZE 16
 #define FPS 60
 
 //Estructuras existentes

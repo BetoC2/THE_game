@@ -1,11 +1,6 @@
 
 #include "librarby.h"
 
-struct list{
-    void** array;
-    int elements;
-    int size;
-};
 
 Rectangle create_hitbox(float x, float y){
     Rectangle r = {x, y, SIZE, SIZE};
@@ -31,6 +26,10 @@ Rectangle hitbox_arma(int lado, float eje_x, float eje_y){
     return r;
 }
 
+float velocidad (float tiles){
+    return tiles * SIZE / FPS;
+}
+
 float diferencia(float num_1, float num_2){
     float dif = num_1 - num_2;
     dif = dif < 0? dif * -1: dif;
@@ -47,6 +46,13 @@ double distance(Rectangle point_1, Rectangle point_2){
 
 
 // LISTAS
+struct list{
+    void** array;
+    int elements;
+    int size;
+};
+
+
 List* new_list(){
     List* l = malloc(sizeof(List));
     l->elements = 0;

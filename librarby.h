@@ -7,6 +7,7 @@
 //Para simplificar
 Rectangle create_hitbox(float x, float y);
 Rectangle hitbox_arma(int lado, float x, float y);
+float velocidad (float tiles);
 float diferencia(float num_1, float num_2);
 double distance(Rectangle point_1, Rectangle point_2);
 
