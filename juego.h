@@ -4,6 +4,11 @@
 
 #include "global.h"
 
+// AWAS
+List* spawn_awas();
+void draw_awa(List* l);
+void manage_awa(List* l, Player* p);
+
 // JUGADOR
 Player* create_player();
 void draw_player(Player* p);
@@ -17,6 +22,6 @@ void chocar_paredes(Player* p, List* w);
 //ENEMIGOS
 List* summon_enemies();
 void draw_enemies(List* l);
-void manage_enemies(Player* p, List* l);
+void manage_enemies(Player* p, List* l, List* a);
 
 #endif //GAME_JUEGO_H

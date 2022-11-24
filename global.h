@@ -15,10 +15,11 @@
 #define SIZE 64
 #define FPS 60
 
-//Estrcuturas existentes
+//Estructuras existentes
 typedef struct player Player;
 typedef struct enemy Enemy;
 typedef struct wall Wall;
+typedef struct awas AwasdeSabor;
 
 typedef struct list List;
 

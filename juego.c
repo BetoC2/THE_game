@@ -3,6 +3,7 @@
 #include "librarby.h"
 
 //Estructuras
+
 struct player{
     Rectangle hitbox;   // Ubicación y colisión
     Rectangle arma;     // hitbox del ataque
@@ -12,8 +13,10 @@ struct player{
     int damage;
     int facing;         // 1 arriba, 2 derecha, 3 abajo, 4 izquierda
     int state;          // Atacando o no, 0 y 1
+    List* awas;         // Pociones a la mano
     int timer_damage;
     int timer_atack;
+    int timer_awas;
     //sprite
 };
 
@@ -33,13 +36,63 @@ struct enemy{
     //sprite            // Futuro sprite
 };
 
+struct awas{
+    int sabor;
+    Rectangle ubicacion;
+    // Sprite
+};
+
+
+//AWAS
+
+List* spawn_awas(){
+    List* l = new_list();
+    AwasdeSabor* a = malloc(sizeof(AwasdeSabor));
+
+    a->sabor = rand()%1 + 1;
+    a->ubicacion = create_hitbox(64, 64);
+    list_add(l,a);
+
+    return l;
+
+};
+
+void draw_awa(List* l){
+
+    for(int i = 0; i < list_size(l); i++){
+        AwasdeSabor* a = list_get(l,i);
+        DrawRectangleRec(a->ubicacion, GREEN);
+    }
+}
+
+void manage_awa(List* l, Player* p){
+
+    for(int i = 0; i < list_size(l); i++){
+        AwasdeSabor* a = list_get(l, i);
+
+        if(CheckCollisionRecs(p->hitbox, a->ubicacion)){
+            list_delete(l, i);
+            list_add(p->awas, a);
+        }
+
+    }
+}
+
+void drop_awa(List* l, Rectangle r){
+    AwasdeSabor* a = malloc(sizeof(AwasdeSabor));
+    a->sabor = rand()%3 + 1;
+    a->ubicacion = r;
+
+    list_add(l, a);
+}
+
 
 // JUGADOR
 Player* create_player(){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
-    jugador->vida = 10;
-    jugador->speed = 4;
+    jugador->vida = 5;
+    jugador->speed = 4 * 60 / SIZE;
     jugador->damage = 1;
     jugador->side[0] = 0;
     jugador->side[1] = 0;
@@ -47,6 +100,7 @@ Player* create_player(){
     jugador->timer_damage = 0;
     jugador->facing = 3;
     jugador->arma = hitbox_arma(jugador->facing, jugador->hitbox.x, jugador->hitbox.y);
+    jugador->awas = new_list();
     return jugador;
 }
 
@@ -57,8 +111,19 @@ void draw_player(Player* p){
     if(p->timer_damage % 16 > 8 || p->timer_damage < 16)
         DrawRectangleRec(p->hitbox,LIGHTGRAY);
 
+    if(list_size(p->awas)) {
+
+        AwasdeSabor *a = list_peek(p->awas);
+        Color awa = !a->sabor ? WHITE : a->sabor == 1 ? RED : a->sabor == 2 ? GREEN : BLUE;
+
+        DrawCircle(S_WIDHT - 64, 64, 15, awa);
+    }
+
+
     for(int i = 0; i < p->vida; i++)
         DrawCircle(40*(i+1), 20, 15, RED);
+
+
 
 }   //ESTO SE VA A CAMBIAR
 
@@ -83,12 +148,41 @@ void ataque_player(Player* p){
         p->timer_atack--;
 }
 
+void use_awas(Player* p){
+    if(IsKeyDown(KEY_LEFT_SHIFT) && !p->timer_awas && list_size(p->awas)){
+        AwasdeSabor* a = list_pop(p->awas);
+        p->timer_damage += FPS / 2;
+        p->timer_atack += FPS / 2;
+
+        if(a->sabor == 1)
+            p->vida += 2;
+
+        if(a->sabor == 2){
+            p->speed += 1.5f;
+            p->timer_awas += FPS * 6;
+        }
+        if(a->sabor == 3){
+            p->damage += 1;
+            p->timer_awas += FPS * 5;
+        }
+    }
+
+    if(p->timer_awas){
+        p->timer_awas--;
+        if(!p->timer_awas){
+            p->damage = 1;
+            p->speed = 4;
+        }
+    }
+}
+
 int manage_player(Player* p){
 
     move_player(p);
 
     p->arma = hitbox_arma(p->facing, p->hitbox.x, p->hitbox.y);
     ataque_player(p);
+    use_awas(p);
 
     p->side[0] = 0;
     p->side[1] = 0;
@@ -189,7 +283,7 @@ List* summon_enemies(){
         list_add(l,e);
     }
     return l;
-}   //ESTO SE VA A CAMBIAR
+}       //ESTO SE VA A CAMBIAR
 
 void draw_enemies(List* l){
     for (int i = 0; i < list_size(l); ++i) {
@@ -244,7 +338,7 @@ void lastimar_atacar(Player* p, Enemy* e){
         p->timer_damage--;
 }
 
-void manage_enemies(Player* p, List* l){
+void manage_enemies(Player* p, List* l, List* a){
 
     for(int i = 0; i < list_size(l); i++){
         Enemy* e = list_get(l,i);
@@ -252,7 +346,12 @@ void manage_enemies(Player* p, List* l){
         move_enemies(p, e);
         lastimar_atacar(p, e);
 
-        if(e->vida<=0)
-            list_delete(l,i);
+        if(e->vida<=0) {
+            if(rand()%21 < 20)         //QUE SEA UN 20%
+                drop_awa(a, e->hitbox);
+
+            list_delete(l, i);
+        }
     }
 }
+

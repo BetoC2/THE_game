@@ -31,6 +31,9 @@ int main(void)
     Player* jugador = create_player();
     List* paredes = crate_walls();
     List* enemigos = summon_enemies();
+    List* awas_tiradas = spawn_awas();
+
+    int se_perdio;
 
 
     // YO SOY EL JUEGO :O
@@ -39,9 +42,13 @@ int main(void)
 
         // Cambios
         chocar_paredes( jugador, paredes);
-        if(manage_player(jugador))
+        manage_awa(awas_tiradas, jugador);
+        se_perdio = manage_player(jugador);
+        if(se_perdio)
             break;
-        manage_enemies(jugador, enemigos);
+        manage_enemies(jugador, enemigos, awas_tiradas);
+
+
 
 
         BeginDrawing(); //---------------------
@@ -53,6 +60,8 @@ int main(void)
         draw_walls(paredes);
         draw_enemies(enemigos);
         draw_player(jugador);
+        draw_awa(awas_tiradas);
+
 
 
         EndDrawing(); //-----------------------
@@ -60,9 +69,9 @@ int main(void)
     }
 
     CloseWindow();
-    if(rand()%2)
+    if(rand()%2 && se_perdio)
         OpenURL("https://www.youtube.com/watch?v=RmUWWVZw28E");
-    else
+    else if(se_perdio)
         OpenURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 
     return 0;
