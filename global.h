@@ -14,6 +14,7 @@
 #define S_HEIGHT 640
 #define SIZE 16
 #define FPS 60
+#define TILE 16
 
 //Estructuras existentes
 typedef struct player Player;

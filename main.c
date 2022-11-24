@@ -20,7 +20,6 @@ void fondo() {
     }
 }
 
-
 int main(void)
 {
     InitWindow(S_WIDHT, S_HEIGHT, "Coconut doggy");
