@@ -1,5 +1,6 @@
 #include "map.h"
 
+//FUNCIONES DE APOYO
 void copy_matrix(int matrix[64][64], int to_copy[64][64]){
     for (int i = 0; i < 64; i++){
         for (int j = 0; j < 64; j++){
@@ -192,6 +193,9 @@ void rooms_connect_down(int matrix[64][64], int x, int y){
     matrix[y_start][x_index+1] = D_FBRIDGE_END;
     matrix[y_start][x_index+2] = RD_WBRIDGE_END;
 }
+
+
+//FUNCIONES PRINCIPALES
 
 void map_generate(int matrix[64][64], int bridges[64][64]){
     for (int i = 0; i < 64; i++){
