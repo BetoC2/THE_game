@@ -167,26 +167,28 @@ void write_map(int map[16][16], char *name){
 }
 
 void load_maps(void) {
-    char raws[7][20] = {
+    char raws[8][20] = {
             {"../maps/raws/raw_1"},
             {"../maps/raws/raw_2"},
             {"../maps/raws/raw_3"},
             {"../maps/raws/raw_4"},
             {"../maps/raws/raw_5"},
             {"../maps/raws/raw_6"},
-            {"../maps/raws/raw_7"}
+            {"../maps/raws/raw_7"},
+            {"../maps/raws/raw_s"}
     };
-    char maps[7][14] = {
+    char maps[8][14] = {
             {"../maps/map_1"},
             {"../maps/map_2"},
             {"../maps/map_3"},
             {"../maps/map_4"},
             {"../maps/map_5"},
             {"../maps/map_6"},
-            {"../maps/map_7"}
+            {"../maps/map_7"},
+            {"../maps/map_s"}
     };
 
-    for (int i = 0; i < 7; i++){
+    for (int i = 0; i < 8; i++){
         int map[16][16];
         load_raw(map, raws[i]);
         write_map(map, maps[i]);

@@ -5,8 +5,8 @@
 
 #define SPAWN_RATE 2
 
-void map_generate(int matrix[64][64], int bridges[64][64]);
-void map_draw(int matrix[64][64]);
+void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector);
+void map_draw(int matrix[64][64], Vector2 vector);
 
 // Horizontal bridge floors
 #define R_FBRIDGE_END 8

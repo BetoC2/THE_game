@@ -59,7 +59,7 @@ void rooms_generate(int rooms[4][4]){
     int x = rand() % 4;
     int y = rand() % 4;
     int rep = rand() % 3;
-    rooms_fill(rooms, x, y, 6+rep);
+    rooms_fill(rooms, x, y, 7+rep);
 }
 
 void rooms_load(int map[16][16], char *name){
@@ -90,10 +90,12 @@ void rooms_get_spawn(int map[16][16]){
     }
 }
 
-void rooms_replace(int matrix[64][64], int x, int y, char *name){
+void rooms_replace(int matrix[64][64], int x, int y, char *name, int spawn_floor){
     int map[16][16];
     rooms_load(map, name);
-    rooms_get_spawn(map);
+
+    if (spawn_floor)
+        rooms_get_spawn(map);
 
     for (int i = y, b = 0; (i < y + TILE) && b < 16; i++,b++){
         for(int j = x, a = 0; (j < x + TILE) && a < 16; j++, a++){
@@ -102,7 +104,7 @@ void rooms_replace(int matrix[64][64], int x, int y, char *name){
     }
 }
 
-void rooms_insert(int matrix[64][64], int rooms[4][4]){
+void rooms_insert(int matrix[64][64], int rooms[4][4], Vector2 *vector){
     char files[8][14] = {
             {"../maps/map_1"},
             {"../maps/map_2"},
@@ -121,13 +123,23 @@ void rooms_insert(int matrix[64][64], int rooms[4][4]){
     else
         fclose(file);
 
+    int first = 0;
+
     for (int i = 0; i < 4; i++){
         for (int j = 0; j < 4; j++){
-            if (rooms[j][i] == 1){
-                int random = rand() % 7;
-                int x = i * TILE;
-                int y = j * TILE;
-                rooms_replace(matrix, x, y, files[random]);
+            if (rooms[i][j] == 1){
+                int x = j * TILE;
+                int y = i * TILE;
+                if (!first){
+                    rooms_replace(matrix, x, y, files[7], 0);
+                    vector->x = x + 4;
+                    vector->y = y + 7;
+                    first++;
+                }
+                else {
+                    int random = rand() % 7;
+                    rooms_replace(matrix, x, y, files[random], 1);
+                }
             }
         }
     }
@@ -197,7 +209,7 @@ void rooms_connect_down(int matrix[64][64], int x, int y){
 
 //FUNCIONES PRINCIPALES
 
-void map_generate(int matrix[64][64], int bridges[64][64]){
+void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector){
     for (int i = 0; i < 64; i++){
         for (int j = 0; j < 64; j++){
             matrix[i][j] = 0;
@@ -206,7 +218,7 @@ void map_generate(int matrix[64][64], int bridges[64][64]){
 
     int rooms[4][4];
     rooms_generate(rooms);
-    rooms_insert(matrix, rooms);
+    rooms_insert(matrix, rooms, vector);
     copy_matrix(matrix, bridges);
 
     for (int i = 0; i < 4; i++){
@@ -226,7 +238,7 @@ void map_generate(int matrix[64][64], int bridges[64][64]){
 }
 
     //Dibujo solo para que se vea shido, puede reusarse para pruebas
-void map_draw(int matrix[64][64]){
+void map_draw(int matrix[64][64], Vector2 vector){
     for (int i = 0; i < 64; i++){
         for (int j = 0; j < 64; j++){
             switch (matrix[i][j]) {
@@ -303,6 +315,7 @@ void map_draw(int matrix[64][64]){
                     DrawRectangle(j * TILE, i * TILE, TILE, TILE, BLACK);
                     break;
             }
+            DrawRectangle(vector.x * TILE, vector.y * TILE, TILE, TILE, RED);
         }
     }
 }

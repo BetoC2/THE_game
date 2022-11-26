@@ -1,6 +1,7 @@
 
 #include "juego.h"
 #include "global.h"
+#include "map.h"
 
 //Esto solo está de mientras, luego lo quitamos
 void fondo() {
@@ -26,6 +27,11 @@ int main(void)
 
     srand(time(NULL));
     SetTargetFPS(FPS);           // Poner el juego a 60 frames
+
+    int map[64][64];
+    int bridges[64][64];
+    Vector2 initial_position;
+    map_generate(map, bridges, &initial_position);
 
     Player* jugador = create_player();
     List* paredes = crate_walls();
