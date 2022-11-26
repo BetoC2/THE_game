@@ -14,7 +14,6 @@ Player* create_player(Vector2* v);
 void draw_player(Player* p);
 int manage_player(Player* p);
 
-
 //PAREDES
 List* crate_walls(int map[64][64]);
 void draw_walls(List* l);
@@ -24,6 +23,10 @@ void chocar_paredes(Player* p, List* w);
 List* summon_enemies(int map[64][64]);
 void draw_enemies(List* l);
 void manage_enemies(Player* p, List* l, List* a);
+
+//SUELO
+List* crear_suelo(int map[64][64]);
+void draw_floor(List* l);
 
 //Cámara
 Camera2D crear_camara(Player* p);

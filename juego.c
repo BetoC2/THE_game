@@ -25,6 +25,7 @@ struct player{
 struct wall{
     Rectangle hitbox;   // Posición y zona de colisión
     //Sprite ??         // Futuro sprite
+    //Vector2D          //Posicion dentro del sprite
 };
 
 struct enemy{
@@ -47,8 +48,8 @@ struct awas{
 struct floor{
     Rectangle place;
     int tipo;           //De mientras, se borra después
-    //Vector?
-    //2D coso
+    //Vector?           Ubicación de la imagen
+    //Imagen            Imagen del sprite
 };
 
 
@@ -70,7 +71,7 @@ void draw_awa(List* l){
 
     for(int i = 0; i < list_size(l); i++){
         AwasdeSabor* a = list_get(l,i);
-        DrawRectangleRec(a->ubicacion, GREEN);
+        DrawRectangleRec(a->ubicacion, YELLOW);
     }
 }
 
@@ -129,11 +130,11 @@ void draw_player(Player* p){
         AwasdeSabor *a = list_peek(p->awas);
         Color awa = !a->sabor ? WHITE : a->sabor == 1 ? RED : a->sabor == 2 ? GREEN : BLUE;
 
-        DrawCircle(p->hitbox.x + 160, p->hitbox.y - 96, SIZE/2.0, awa);
+        DrawCircle(p->hitbox.x + 150, p->hitbox.y - 86, SIZE/2.0, awa);
     }
 
     for(int i = 0; i < p->vida; i++)
-        DrawCircle(p->hitbox.x + SIZE * (i * 1.1)  - 160, p->hitbox.y - 96, SIZE/2.0, RED);
+        DrawCircle(p->hitbox.x + SIZE * (i * 1.1)  - 150, p->hitbox.y - 86, SIZE/2.0, RED);
 
 }   //ESTO SE VA A CAMBIAR
     //cosas de manage
@@ -153,8 +154,12 @@ void ataque_player(Player* p){
     if(IsKeyPressed(KEY_SPACE) && !p->timer_atack){
         p->timer_atack = FPS * 1.5;
     }
+
     if(p->timer_atack)
         p->timer_atack--;
+
+    if(p->timer_damage)
+        p->timer_damage--;
 }
 
 void use_awas(Player* p){
@@ -223,7 +228,7 @@ List* crate_walls(int map[64][64]){
 void draw_walls(List* l){
     for(int i = 0; i < list_size(l); i++){
         Wall* w = list_get(l, i);
-        DrawRectangleRec(w->hitbox,YELLOW);
+        DrawRectangleRec(w->hitbox,DARKBLUE);
     }
 
 }
@@ -257,24 +262,26 @@ void chocar_paredes(Player* p, List* w) {
 
 //ENEMIGOS
 void asign_stats(Enemy* e){
+    float r = (float)(rand()%5 -2)/10;
+
     switch (e->type) {
         case 1: //Pequeño y rápido
             e->vida = 4;
-            e->speed = velocidad(2.75f);
+            e->speed = velocidad(2.65f + r);
             e->damage = 1;
-            e->vision = 3.5f;
+            e->vision = 3.5f + r;
             break;
-        case 2: //Tanque
-            e->vida = 10;
-            e->speed = velocidad(1);
+        case 2: //Tanque agresivo
+            e->vida = 8;
+            e->speed = velocidad(1 + r);
             e->damage = 2;
-            e->vision = 6;
+            e->vision = 6 + r;
             break;
         default:    //Por defecto e inutil XD
             e->vida = 1;
-            e->speed = velocidad(0.5f);
+            e->speed = velocidad(0.5f + r);
             e->damage = 0;
-            e->vision = 0.5f;
+            e->vision = 0.5f + r;
     }
 }
 
@@ -301,7 +308,7 @@ List* summon_enemies(int map[64][64]){
 void draw_enemies(List* l){
     for (int i = 0; i < list_size(l); ++i) {
         Enemy* e = list_get(l, i);
-        Color c = e->type == 1? BLUE: RED;
+        Color c = e->type == 1? ORANGE: RED;
 
         if(e->timer % 16 > 8 || e->timer < 16)
             DrawRectangleRec(e->hitbox, c);
@@ -332,7 +339,6 @@ void move_enemies(Player* p, Enemy* e){
 }
 
 void lastimar_atacar(Player* p, Enemy* e){
-
     // Daño a enemigo
     if(CheckCollisionRecs(p->arma, e->hitbox) && !e->timer && p->timer_atack > FPS) {
         e->timer = FPS * 1.5;
@@ -341,16 +347,11 @@ void lastimar_atacar(Player* p, Enemy* e){
     if(e->timer)
         e->timer--;
 
-
     // Daño a jugador
     if(CheckCollisionRecs(p->hitbox, e->hitbox) && !p->timer_damage){
         p->timer_damage += FPS * 1.5;
         p->vida -= e->damage;
     }
-    if(p->timer_damage)
-        p->timer_damage--;
-
-
 
 
 }
@@ -373,23 +374,44 @@ void manage_enemies(Player* p, List* l, List* a){
 }
 
 
-List* crear_suelo(){
+List* crear_suelo(int map[64][64]){
     List* l = new_list();
+
+    for (int i = 0; i < 64; ++i) {      //i = y
+        for (int j = 0; j < 64; ++j) {      //j = x
+            Floor* f = malloc(sizeof(Wall));
+            if(map[i][j] >= WALL && map[i][j] <= GRASS || map[i][j] <= Q_EDGE){
+                f->tipo = map[i][j];
+                f->place = create_hitbox((float)j * SIZE, (float)i * SIZE);
+                list_add(l,f);
+            }
+        }
+    }
 
     return l;
 };
+
+void draw_floor(List* l){
+    Color c;
+
+    for (int i = 0; i < list_size(l); ++i) {
+        Floor * f = list_get(l, i);
+        c = f->tipo == WALL? SKYBLUE: f->tipo <= Q_EDGE? BLUE: GREEN;
+        DrawRectangleRec(f->place, c);
+    }
+}
 
 
 
 //CAMARA
 Camera2D crear_camara(Player* p){
-    Camera2D camara;
-    camara.zoom = 48.0f / SIZE;    // El primer número es el tamaño mostrado en pixeles
-    camara. rotation = 0;
-    camara.offset = (Vector2){S_WIDHT/2.0 , S_HEIGHT/2.0};
-    update_camara(p, &camara);
+    Camera2D c;
+    c.zoom = 48.0f / SIZE;    // El primer número es el tamaño mostrado en pixeles
+    c.rotation = 0;
+    c.offset = (Vector2){S_WIDHT/2.0 - SIZE/2.0 * c.zoom , S_HEIGHT/2.0 - SIZE/2.0 * c.zoom};
+    update_camara(p, &c);
 
-    return  camara;
+    return c;
 }
 
 void update_camara(Player* p, Camera2D* c){

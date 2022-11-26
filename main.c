@@ -22,6 +22,7 @@ int main(void)
     List* paredes = crate_walls(bridges);
     List* enemigos = summon_enemies(map);
     List* awas_tiradas = spawn_awas(&initial_position);
+    List* suelo = crear_suelo(bridges);
 
     //Cámara
     Camera2D camara = crear_camara(jugador);
@@ -50,8 +51,9 @@ int main(void)
 
 
 
-        ClearBackground(RAYWHITE);
+        ClearBackground(SKYBLUE);
 
+        draw_floor(suelo);
         draw_walls(paredes);
         draw_enemies(enemigos);
         draw_player(jugador);
