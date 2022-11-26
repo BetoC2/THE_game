@@ -3,23 +3,6 @@
 #include "global.h"
 #include "map.h"
 
-//Esto solo está de mientras, luego lo quitamos
-void fondo() {
-    int color = 0;
-
-    for(int x = 0; x < 16; x++) {
-        for(int y = 0; y < 10; y++){
-            if (color) {
-                DrawRectangle(64 * x, 64 * y, 64, 64, VIOLET);
-            }
-            else {
-                DrawRectangle(64 * x, 64 * y, 64, 64, BLACK);
-            }
-            color = color? 0: 1;
-        }
-        color = color? 0: 1;
-    }
-}
 
 int main(void)
 {
@@ -33,10 +16,10 @@ int main(void)
     Vector2 initial_position;
     map_generate(map, bridges, &initial_position);
 
-    Player* jugador = create_player();
-    List* paredes = crate_walls();
-    List* enemigos = summon_enemies();
-    List* awas_tiradas = spawn_awas();
+    Player* jugador = create_player(&initial_position);
+    List* paredes = crate_walls(bridges);
+    List* enemigos = summon_enemies(map);
+    List* awas_tiradas = spawn_awas(&initial_position);
 
     int se_perdio;
 
@@ -61,7 +44,6 @@ int main(void)
 
         ClearBackground(RAYWHITE);
 
-        fondo();
         draw_walls(paredes);
         draw_enemies(enemigos);
         draw_player(jugador);

@@ -1,6 +1,7 @@
 
 #include "juego.h"
 #include "librarby.h"
+#include "map.h"
 
 //Estructuras
 
@@ -42,15 +43,22 @@ struct awas{
     // Sprite
 };
 
+struct floor{
+    Rectangle place;
+    int tipo;           //De mientras, se borra después
+    //Vector?
+    //2D coso
+};
+
 
 //AWAS
 
-List* spawn_awas(){
+List* spawn_awas(Vector2* v){
     List* l = new_list();
     AwasdeSabor* a = malloc(sizeof(AwasdeSabor));
 
-    a->sabor = rand()%1 + 1;
-    a->ubicacion = create_hitbox(64, 64);
+    a->sabor = rand()%3 + 1;
+    a->ubicacion = create_hitbox((v->x + 7) * SIZE, v->y * SIZE);
     list_add(l,a);
 
     return l;
@@ -88,9 +96,10 @@ void drop_awa(List* l, Rectangle r){
 
 
 // JUGADOR
-Player* create_player(){
+Player* create_player(Vector2* v){
     Player* jugador = malloc(sizeof(Player));
-    jugador->hitbox = create_hitbox(S_WIDHT/3.0,S_HEIGHT/2.0);
+    jugador->hitbox = create_hitbox(v->x * SIZE,v->y * SIZE);
+
     jugador->vida = 5;
     jugador->speed = velocidad(3.5f);
     jugador->damage = 1;
@@ -195,17 +204,19 @@ int manage_player(Player* p){
 
 
 //PAREDES
-List* crate_walls(){
+List* crate_walls(int map[64][64]){
     List* l  = new_list();
 
-    float mien_x[11] = {2,2,2,3,8,9,10,10,8,10,12};
-    float mien_y[11] = {6,7,8,2,1,1,2,3,5,7,7};
-
-    for(int i = 0; i < 11; i++){
-        Wall* w = malloc(sizeof(Wall));
-        w->hitbox = create_hitbox(mien_x[i]*SIZE, mien_y[i]*SIZE);
-        list_add(l, w);
+    for (int i = 0; i < 64; ++i) {      // i = y
+        for (int j = 0; j < 64; ++j) {      //j = x
+            if(map[i][j] < WALL && map[i][j] >= RV_WBRIDGE){
+                Wall* w = malloc(sizeof(Wall));
+                w->hitbox = create_hitbox((float)j * SIZE, (float)i * SIZE);
+                list_add(l, w);
+            }
+        }
     }
+
     return l;
 }   //ESTO USA LA MATRIZ POR GENERACIÓN DE BETO
 
@@ -268,22 +279,25 @@ void asign_stats(Enemy* e){
     }
 }
 
-List* summon_enemies(){
+List* summon_enemies(int map[64][64]){
     List* l = new_list();
 
-    float mien_x[2] = {14, 0};
-    float mien_y[2] = {1, 9};
+    for (int i = 0; i < 64; ++i) {      // i = y
+        for (int j = 0; j < 64; ++j) {      //j = x
+            if(map[i][j] == FLOOR_SPAWN){
+                Enemy* e = malloc(sizeof(Enemy));
+                e->type = rand()%2 + 1;
+                e->hitbox = create_hitbox((float)j * SIZE, (float)i * SIZE);
+                e->timer = 0;
+                asign_stats(e);
+                list_add(l,e);
 
-    for(int i = 0; i < 2; i++){
-        Enemy* e = malloc(sizeof(Enemy));
-        e->type = rand()%2 + 1;
-        e->hitbox = create_hitbox(mien_x[i] * SIZE, mien_y[i] * SIZE);
-        e->timer = 0;
-        asign_stats(e);
-        list_add(l,e);
+            }
+        }
     }
+
     return l;
-}       //ESTO SE VA A CAMBIAR
+}
 
 void draw_enemies(List* l){
     for (int i = 0; i < list_size(l); ++i) {
@@ -347,7 +361,7 @@ void manage_enemies(Player* p, List* l, List* a){
         lastimar_atacar(p, e);
 
         if(e->vida<=0) {
-            if(rand()%21 < 20)         //QUE SEA UN 20%
+            if(rand()% 5 < 1)         //QUE SEA UN 20%
                 drop_awa(a, e->hitbox);
 
             list_delete(l, i);
@@ -355,3 +369,9 @@ void manage_enemies(Player* p, List* l, List* a){
     }
 }
 
+
+List* crear_suelo(){
+    List* l = new_list();
+
+    return l;
+};

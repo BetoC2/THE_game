@@ -20,10 +20,9 @@
 typedef struct player Player;
 typedef struct enemy Enemy;
 typedef struct wall Wall;
+typedef struct floor Floor;
 typedef struct awas AwasdeSabor;
 
 typedef struct list List;
-
-
 
 #endif //GAME_GLOBAL_H
