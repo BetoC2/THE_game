@@ -101,18 +101,15 @@ Player* create_player(Vector2* v){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(v->x * SIZE,v->y * SIZE);
 
-    jugador->camara.target = (Vector2){v->x * SIZE, v->y * SIZE};
-    jugador->camara.offset = (Vector2){S_WIDHT/2.0 , S_HEIGHT/2.0};
-    jugador->camara.rotation = 0;
-    jugador->camara.zoom = 48.0f / SIZE;    // El primer número es el tamaño mostrado en pixeles
-
     jugador->vida = 5;
     jugador->speed = velocidad(3.5f);
     jugador->damage = 1;
     jugador->side[0] = 0;
     jugador->side[1] = 0;
+    jugador->state = 0;
     jugador->timer_atack = 0;
     jugador->timer_damage = 0;
+    jugador->timer_awas = 0;
     jugador->facing = 3;
     jugador->arma = hitbox_arma(jugador->facing, jugador->hitbox.x, jugador->hitbox.y);
     jugador->awas = new_list();
@@ -135,19 +132,10 @@ void draw_player(Player* p){
         DrawCircle(p->hitbox.x + 160, p->hitbox.y - 96, SIZE/2.0, awa);
     }
 
-
     for(int i = 0; i < p->vida; i++)
         DrawCircle(p->hitbox.x + SIZE * (i * 1.1)  - 160, p->hitbox.y - 96, SIZE/2.0, RED);
 
-
-
 }   //ESTO SE VA A CAMBIAR
-
-Camera2D camara(Player* p){
-    p->camara.target = (Vector2){p->hitbox.x,p->hitbox.y};
-    return p->camara;
-}
-
     //cosas de manage
 void move_player(Player* p){
     if(IsKeyDown(KEY_W) && p->side[0] != 3 && p->side[1] != 3) p->hitbox.y -= p->speed;    //Arriba
@@ -239,7 +227,6 @@ void draw_walls(List* l){
     }
 
 }
-
     //cosas de manage
 void chocar_paredes(Player* p, List* w) {
 
@@ -320,7 +307,6 @@ void draw_enemies(List* l){
             DrawRectangleRec(e->hitbox, c);
     }
 }      //ESTO SE VA A CAMBIAR
-
     //cosas de manage
 void move_enemies(Player* p, Enemy* e){
 
@@ -355,13 +341,18 @@ void lastimar_atacar(Player* p, Enemy* e){
     if(e->timer)
         e->timer--;
 
+
     // Daño a jugador
     if(CheckCollisionRecs(p->hitbox, e->hitbox) && !p->timer_damage){
-        p->timer_damage = FPS * 1.5;
+        p->timer_damage += FPS * 1.5;
         p->vida -= e->damage;
     }
     if(p->timer_damage)
         p->timer_damage--;
+
+
+
+
 }
 
 void manage_enemies(Player* p, List* l, List* a){
@@ -387,3 +378,22 @@ List* crear_suelo(){
 
     return l;
 };
+
+
+
+//CAMARA
+Camera2D crear_camara(Player* p){
+    Camera2D camara;
+    camara.zoom = 48.0f / SIZE;    // El primer número es el tamaño mostrado en pixeles
+    camara. rotation = 0;
+    camara.offset = (Vector2){S_WIDHT/2.0 , S_HEIGHT/2.0};
+    update_camara(p, &camara);
+
+    return  camara;
+}
+
+void update_camara(Player* p, Camera2D* c){
+    c->target = (Vector2){p->hitbox.x,p->hitbox.y};
+}
+
+

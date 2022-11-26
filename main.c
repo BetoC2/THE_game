@@ -11,15 +11,20 @@ int main(void)
     srand(time(NULL));
     SetTargetFPS(FPS);           // Poner el juego a 60 frames
 
+    //Creación del mapa al azar
     int map[64][64];
     int bridges[64][64];
     Vector2 initial_position;
     map_generate(map, bridges, &initial_position);
 
+    //Creación del jugador, enemigos y paredes
     Player* jugador = create_player(&initial_position);
     List* paredes = crate_walls(bridges);
     List* enemigos = summon_enemies(map);
     List* awas_tiradas = spawn_awas(&initial_position);
+
+    //Cámara
+    Camera2D camara = crear_camara(jugador);
 
     int se_perdio;
 
@@ -29,6 +34,7 @@ int main(void)
     {
 
         // Cambios
+        update_camara(jugador, &camara);
         chocar_paredes( jugador, paredes);
         manage_awa(awas_tiradas, jugador);
         se_perdio = manage_player(jugador);
@@ -40,7 +46,7 @@ int main(void)
 
 
         BeginDrawing(); //---------------------
-        BeginMode2D(camara(jugador));
+        BeginMode2D(camara);
 
 
 

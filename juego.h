@@ -13,7 +13,7 @@ void manage_awa(List* l, Player* p);
 Player* create_player(Vector2* v);
 void draw_player(Player* p);
 int manage_player(Player* p);
-Camera2D camara(Player* p);
+
 
 //PAREDES
 List* crate_walls(int map[64][64]);
@@ -24,5 +24,9 @@ void chocar_paredes(Player* p, List* w);
 List* summon_enemies(int map[64][64]);
 void draw_enemies(List* l);
 void manage_enemies(Player* p, List* l, List* a);
+
+//Cámara
+Camera2D crear_camara(Player* p);
+void update_camara(Player* p, Camera2D* c);
 
 #endif //GAME_JUEGO_H
