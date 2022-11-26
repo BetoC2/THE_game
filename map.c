@@ -206,6 +206,33 @@ void rooms_connect_down(int matrix[64][64], int x, int y){
     matrix[y_start][x_index+2] = RD_WBRIDGE_END;
 }
 
+void rooms_insert_decoration(int matrix[64][64]){
+    short path;
+    short paths[] = {PATH_1,PATH_2,PATH_2,PATH_4};
+    for (int i = 0; i < 64; i++){
+        for (int j = 0; j < 64; j++) {
+            int prob = rand() % 100;
+            if (prob < 5 && (matrix[i][j] == FLOOR || matrix[i][j] == FLOOR_SPAWN)) {
+                short random = rand() % 4;
+                switch (random) {
+                    case 0:
+                        matrix[i][j] = GRASS;
+                        break;
+                    case 1:
+                        matrix[i][j] = BMUSH;
+                        break;
+                    case 2:
+                        matrix[i][j] = RMUSH;
+                        break;
+                    case 3:
+                        path = rand() % 4;
+                        matrix[i][j] = paths[path];
+                        break;
+                }
+            }
+        }
+    }
+}
 
 //FUNCIONES PRINCIPALES
 
@@ -235,9 +262,10 @@ void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector){
             }
         }
     }
+    rooms_insert_decoration(bridges);
 }
 
-    //Dibujo solo para que se vea shido, puede reusarse para pruebas
+//Dibujo solo para que se vea shido, puede reusarse para pruebas
 void map_draw(int matrix[64][64], Vector2 vector){
     for (int i = 0; i < 64; i++){
         for (int j = 0; j < 64; j++){

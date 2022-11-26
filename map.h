@@ -8,6 +8,15 @@
 void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector);
 void map_draw(int matrix[64][64], Vector2 vector);
 
+//Decoration
+#define GRASS 15
+#define PATH_1 14
+#define PATH_2 13
+#define PATH_3 12
+#define PATH_4 11
+#define BMUSH 10
+#define RMUSH 9
+
 // Horizontal bridge floors
 #define R_FBRIDGE_END 8
 #define L_FBRIDGE_END 7
