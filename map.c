@@ -225,6 +225,7 @@ void map_generate(int matrix[64][64], int bridges[64][64]){
     }
 }
 
+    //Dibujo solo para que se vea shido, puede reusarse para pruebas
 void map_draw(int matrix[64][64]){
     for (int i = 0; i < 64; i++){
         for (int j = 0; j < 64; j++){
