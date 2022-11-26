@@ -40,6 +40,8 @@ int main(void)
 
 
         BeginDrawing(); //---------------------
+        BeginMode2D(camara(jugador));
+
 
 
         ClearBackground(RAYWHITE);
@@ -49,7 +51,7 @@ int main(void)
         draw_player(jugador);
         draw_awa(awas_tiradas);
 
-
+        EndMode2D();
 
         EndDrawing(); //-----------------------
 

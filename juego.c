@@ -18,6 +18,7 @@ struct player{
     int timer_damage;
     int timer_atack;
     int timer_awas;
+    Camera2D camara;
     //sprite
 };
 
@@ -100,6 +101,11 @@ Player* create_player(Vector2* v){
     Player* jugador = malloc(sizeof(Player));
     jugador->hitbox = create_hitbox(v->x * SIZE,v->y * SIZE);
 
+    jugador->camara.target = (Vector2){v->x * SIZE, v->y * SIZE};
+    jugador->camara.offset = (Vector2){S_WIDHT/2.0 , S_HEIGHT/2.0};
+    jugador->camara.rotation = 0;
+    jugador->camara.zoom = 48.0f / SIZE;    // El primer número es el tamaño mostrado en pixeles
+
     jugador->vida = 5;
     jugador->speed = velocidad(3.5f);
     jugador->damage = 1;
@@ -110,6 +116,7 @@ Player* create_player(Vector2* v){
     jugador->facing = 3;
     jugador->arma = hitbox_arma(jugador->facing, jugador->hitbox.x, jugador->hitbox.y);
     jugador->awas = new_list();
+
     return jugador;
 }
 
@@ -125,16 +132,21 @@ void draw_player(Player* p){
         AwasdeSabor *a = list_peek(p->awas);
         Color awa = !a->sabor ? WHITE : a->sabor == 1 ? RED : a->sabor == 2 ? GREEN : BLUE;
 
-        DrawCircle(S_WIDHT - 64, 64, 15, awa);
+        DrawCircle(p->hitbox.x + 160, p->hitbox.y - 96, SIZE/2.0, awa);
     }
 
 
     for(int i = 0; i < p->vida; i++)
-        DrawCircle(40*(i+1), 20, 15, RED);
+        DrawCircle(p->hitbox.x + SIZE * (i * 1.1)  - 160, p->hitbox.y - 96, SIZE/2.0, RED);
 
 
 
 }   //ESTO SE VA A CAMBIAR
+
+Camera2D camara(Player* p){
+    p->camara.target = (Vector2){p->hitbox.x,p->hitbox.y};
+    return p->camara;
+}
 
     //cosas de manage
 void move_player(Player* p){
