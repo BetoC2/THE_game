@@ -11,16 +11,21 @@ int main(void)
     srand(time(NULL));
     SetTargetFPS(FPS);           // Poner el juego a 60 frames
 
+    Texture2D sprite_w, sprite_d;
+    sprite_w = LoadTexture("../forest.png");
+    sprite_d = LoadTexture("../forestDecoration.png");
+
     //Creación del mapa al azar
     int map[64][64];
     int bridges[64][64];
     Vector2 initial_position;
     map_generate(map, bridges, &initial_position);
 
+
     //Creación del jugador, enemigos y paredes
     Player* jugador = create_player(&initial_position);
     List* paredes = crate_walls(bridges);
-    List* enemigos = summon_enemies(map);
+    //List* enemigos = summon_enemies(map);
     List* awas_tiradas = spawn_awas(&initial_position);
     List* suelo = crear_suelo(bridges);
 
@@ -41,7 +46,7 @@ int main(void)
         se_perdio = manage_player(jugador);
         if(se_perdio)
             break;
-        manage_enemies(jugador, enemigos, awas_tiradas);
+        //manage_enemies(jugador, enemigos, awas_tiradas);
 
 
 
@@ -51,11 +56,12 @@ int main(void)
 
 
 
-        ClearBackground(SKYBLUE);
+        ClearBackground(WATER);
 
-        draw_floor(suelo);
-        draw_walls(paredes);
-        draw_enemies(enemigos);
+        map_draw(bridges,  sprite_w, sprite_d);
+        //draw_floor(suelo);
+        //draw_walls(paredes);
+        //draw_enemies(enemigos);
         draw_player(jugador);
         draw_awa(awas_tiradas);
 

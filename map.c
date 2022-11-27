@@ -265,85 +265,195 @@ void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector){
     rooms_insert_decoration(bridges);
 }
 
-//Dibujo solo para que se vea shido, puede reusarse para pruebas
-void map_draw(int matrix[64][64], Vector2 vector){
-    for (int i = 0; i < 64; i++){
-        for (int j = 0; j < 64; j++){
-            switch (matrix[i][j]) {
-                case FLOOR:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, DARKGREEN);
-                    break;
+void create_texture_wall(Texture2D sprite, int x, int y, Vector2 victor){
+    Texture2D spr = sprite;
+    Rectangle recto = {x * TILE, y * TILE, (float)spr.width / 15, (float)spr.height / 36};
+    DrawTextureRec(spr, recto, victor, WHITE);
+}
 
+void create_texture_bridge(Texture2D sprite, int x, int y, Vector2 victor){
+    Texture2D spr = sprite;
+    Rectangle recto = {x * TILE, y * TILE, (float)spr.width / 25, (float)spr.height / 22};
+    DrawTextureRec(spr, recto, victor, WHITE);
+}
+//Dibujo solo para que se vea shido, puede reusarse para pruebas
+
+void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_b){
+    Vector2 victor;
+    for (int y = 0; y < 64; y++){
+        for (int x = 0; x < 64; x++){
+            victor = (Vector2){x * TILE,y * TILE};
+            switch (matrix[y][x]) {
+                case FLOOR:
                 case FLOOR_SPAWN:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, ORANGE);
+                    create_texture_wall(sprite, 2, 30, victor);
                     break;
 
                 case L_FBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 11, 14, victor);
+                    break;
                 case H_FBRIDGE:
+                    create_texture_wall(sprite, 2, 2, victor);
+                    create_texture_bridge(sprite_b, 12, 14, victor);
+                    break;
                 case R_FBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 10, 14, victor);
+                    break;
                 case U_FBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 15, 18, victor);
+                    break;
                 case V_FBRIDGE:
+                    create_texture_wall(sprite, 2, 2, victor);
+                    create_texture_bridge(sprite_b, 15, 19, victor);
+                    break;
                 case D_FBRIDGE_END:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, GRAY);
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 15, 20, victor);
                     break;
 
                 case L_WBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 11, 13, victor);
+                    break;
                 case H_WBRIDGE:
+                    create_texture_wall(sprite, 2, 2, victor);
+                    create_texture_bridge(sprite_b, 12, 13, victor);
+                    break;
                 case R_WBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 10, 13, victor);
+                    break;
                 case LU_WBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 14, 18, victor);
+                    break;
                 case LV_WBRIDGE:
+                    create_texture_wall(sprite, 2, 2, victor);
+                    create_texture_bridge(sprite_b, 14, 19, victor);
+                    break;
                 case LD_WBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 14, 20, victor);
+                    break;
                 case RU_WBRIDGE_END:
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 16, 18, victor);
+                    break;
                 case RV_WBRIDGE:
+                    create_texture_wall(sprite, 2, 2, victor);
+                    create_texture_bridge(sprite_b, 16, 19, victor);
+                    break;
                 case RD_WBRIDGE_END:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, DARKGRAY);
+                    create_texture_wall(sprite, 2, 30, victor);
+                    create_texture_bridge(sprite_b, 16, 20, victor);
                     break;
 
                 case L_WALL:
+                    create_texture_wall(sprite, 1, 2, victor);
+                    break;
                 case LR_WALL:
+                    create_texture_wall(sprite, 4, 2, victor);
+                    break;
                 case LU_WALL:
+                    create_texture_wall(sprite, 1, 1, victor);
+                    break;
                 case LD_WALL:
+                    create_texture_wall(sprite, 1, 3, victor);
+                    break;
                 case LRU_WALL:
+                    create_texture_wall(sprite, 4, 1, victor);
+                    break;
                 case LRD_WALL:
+                    create_texture_wall(sprite, 4, 3, victor);
+                    break;
                 case LRUD_WALL:
+                    create_texture_wall(sprite, 4, 4, victor);
+                    break;
                 case R_WALL:
+                    create_texture_wall(sprite, 3, 2, victor);
+                    break;
                 case RU_WALL:
+                    create_texture_wall(sprite, 3, 1, victor);
+                    break;
                 case RD_WALL:
+                    create_texture_wall(sprite, 3, 3, victor);
+                    break;
                 case RUD_WALL:
+                    create_texture_wall(sprite, 3, 4, victor);
+                    break;
                 case U_WALL:
+                    create_texture_wall(sprite, 2, 1, victor);
+                    break;
                 case UD_WALL:
+                    create_texture_wall(sprite, 2, 4, victor);
+                    break;
                 case D_WALL:
+                    create_texture_wall(sprite, 2, 3, victor);
+                    break;
                 case LUD_WALL:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, DARKBLUE);
+                    create_texture_wall(sprite, 1, 4, victor);
                     break;
 
                 case Q_EDGE:
+                    create_texture_wall(sprite, 6, 2, victor);
+                    break;
                 case Z_EDGE:
+                    create_texture_wall(sprite, 6, 1, victor);
+                    break;
                 case P_EDGE:
+                    create_texture_wall(sprite, 5, 2, victor);
+                    break;
                 case M_EDGE:
+                    create_texture_wall(sprite, 5, 1, victor);
+                    break;
                 case QZ_EDGE:
+                    create_texture_wall(sprite, 7, 2, victor);
+                    break;
                 case QP_EDGE:
+                    create_texture_wall(sprite, 6, 4, victor);
+                    break;
                 case QM_EDGE:
+                    create_texture_wall(sprite, 7, 1, victor);
+                    break;
                 case ZP_EDGE:
+                    create_texture_wall(sprite, 8, 1, victor);
+                    break;
                 case ZM_EDGE:
+                    create_texture_wall(sprite, 6, 3, victor);
+                    break;
                 case PM_EDGE:
+                    create_texture_wall(sprite, 8, 2, victor);
+                    break;
                 case QZP_EDGE:
+                    create_texture_wall(sprite, 7, 3, victor);
+                    break;
                 case QZM_EDGE:
+                    create_texture_wall(sprite, 7, 4, victor);
+                    break;
                 case ZPM_EDGE:
+                    create_texture_wall(sprite, 8, 4, victor);
+                    break;
                 case QPM_EDGE:
+                    create_texture_wall(sprite, 8, 3, victor);
+                    break;
                 case QZPM_EDGE:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, BLUE);
+                    create_texture_wall(sprite, 12, 2, victor);
                     break;
 
                 case WALL:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, SKYBLUE);
+                    create_texture_wall(sprite, 2, 2, victor);
+                    //DrawRectangle(x * TILE, y * TILE, TILE, TILE, SKYBLUE);
                     break;
 
                 default:
-                    DrawRectangle(j * TILE, i * TILE, TILE, TILE, BLACK);
+                    DrawRectangle(x * TILE, y * TILE, TILE, TILE, PINK);
                     break;
             }
-            DrawRectangle(vector.x * TILE, vector.y * TILE, TILE, TILE, RED);
+            //DrawTextureRec(sprite,recto, victor, WHITE);
+            //DrawRectangle(vector.x * TILE, vector.y * TILE, TILE, TILE, RED);
         }
     }
 }

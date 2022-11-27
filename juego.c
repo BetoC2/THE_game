@@ -19,7 +19,7 @@ struct player{
     int timer_atack;
     int timer_awas;
     Camera2D camara;
-    //sprite
+    Texture2D sprite;
 };
 
 struct wall{
@@ -36,13 +36,13 @@ struct enemy{
     int damage;
     float vision;       // Distancia (en tiles) de seguimiento
     int timer;          //Evita recibir mucho daño
-    //sprite            // Futuro sprite
+    Texture2D sprite;            // Futuro sprite
 };
 
 struct awas{
     int sabor;
     Rectangle ubicacion;
-    // Sprite
+    Texture2D Sprite;
 };
 
 struct floor{
@@ -114,6 +114,7 @@ Player* create_player(Vector2* v){
     jugador->facing = 3;
     jugador->arma = hitbox_arma(jugador->facing, jugador->hitbox.x, jugador->hitbox.y);
     jugador->awas = new_list();
+    //jugador->sprite = sprite;
 
     return jugador;
 }
@@ -150,7 +151,23 @@ void move_player(Player* p){
     if(IsKeyDown(KEY_A)) p->facing = 4;
 }
 
+void move_pad_player(Player* p){
+    if(IsGamepadButtonDown(0,GAMEPAD_BUTTON_LEFT_FACE_UP) && p->side[0] != 3 && p->side[1] != 3) p->hitbox.y -= p->speed;
+    if(IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN) && p->side[0] != 1 && p->side[1] != 1) p->hitbox.y += p->speed;
+    if(IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT) && p->side[0] != 2 && p->side[1] != 2) p->hitbox.x -= p->speed;
+    if(IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) && p->side[0] != 4 && p->side[1] != 4) p->hitbox.x += p->speed;
+
+    if(IsGamepadButtonDown(0,GAMEPAD_BUTTON_LEFT_FACE_UP)) p->facing = 1;
+    if(IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_DOWN)) p->facing = 3;
+    if(IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_RIGHT)) p->facing = 2;
+    if(IsGamepadButtonDown(0, GAMEPAD_BUTTON_LEFT_FACE_LEFT)) p->facing = 4;
+}
+
 void ataque_player(Player* p){
+    if(IsGamepadButtonPressed(0,GAMEPAD_BUTTON_RIGHT_FACE_LEFT) && !p->timer_atack){
+        p->timer_atack = FPS * 1.5;
+    }
+
     if(IsKeyPressed(KEY_SPACE) && !p->timer_atack){
         p->timer_atack = FPS * 1.5;
     }
@@ -181,6 +198,24 @@ void use_awas(Player* p){
         }
     }
 
+    if(IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) && !p->timer_awas && list_size(p->awas)){
+        AwasdeSabor* a = list_pop(p->awas);
+        p->timer_damage += FPS / 2;
+        p->timer_atack += FPS / 2;
+
+        if(a->sabor == 1)
+            p->vida += 3;
+
+        if(a->sabor == 2){
+            p->speed += velocidad(2.5f);
+            p->timer_awas += FPS * 6;
+        }
+        if(a->sabor == 3){
+            p->damage += 2;
+            p->timer_awas += FPS * 5;
+        }
+    }
+
     if(p->timer_awas){
         p->timer_awas--;
         if(!p->timer_awas){
@@ -192,7 +227,12 @@ void use_awas(Player* p){
 
 int manage_player(Player* p){
 
-    move_player(p);
+    if(IsGamepadAvailable(0)){
+        move_pad_player(p);
+    }
+    else{
+        move_player(p);
+    }
 
     p->arma = hitbox_arma(p->facing, p->hitbox.x, p->hitbox.y);
     ataque_player(p);
@@ -230,7 +270,6 @@ void draw_walls(List* l){
         Wall* w = list_get(l, i);
         DrawRectangleRec(w->hitbox,DARKBLUE);
     }
-
 }
     //cosas de manage
 void chocar_paredes(Player* p, List* w) {

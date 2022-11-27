@@ -15,6 +15,7 @@
 #define SIZE 16
 #define FPS 60
 #define TILE SIZE
+#define WATER (Color){ 92, 105, 159, 255 }
 
 //Estructuras existentes
 typedef struct player Player;
@@ -24,5 +25,6 @@ typedef struct floor Floor;
 typedef struct awas AwasdeSabor;
 
 typedef struct list List;
+
 
 #endif //GAME_GLOBAL_H
