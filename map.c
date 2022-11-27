@@ -208,7 +208,7 @@ void rooms_connect_down(int matrix[64][64], int x, int y){
 
 void rooms_insert_decoration(int matrix[64][64]){
     short path;
-    short paths[] = {PATH_1,PATH_2,PATH_2,PATH_4};
+    short paths[] = {PATH_1,PATH_2,PATH_3,PATH_4};
     for (int i = 0; i < 64; i++){
         for (int j = 0; j < 64; j++) {
             int prob = rand() % 100;

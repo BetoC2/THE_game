@@ -8,6 +8,11 @@
 void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector);
 void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_dos);
 
+//Fix textures
+#define MUSH_RCORNER 18
+#define MUSH_LCORNER 17
+#define AMOGUS 16
+
 //Decoration
 #define GRASS 15
 #define PATH_1 14

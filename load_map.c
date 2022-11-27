@@ -155,8 +155,15 @@ void load_raw(int map[16][16], char *name){
     fclose(file);
 }
 
-void write_map(int map[16][16], char *name){
+void write_map(int map[16][16], char *name, int index){
     make_map(map);
+    if (index == 0){
+        map[9][6] = MUSH_LCORNER;
+        map[9][9] = MUSH_RCORNER;
+    }
+    if (index == 5){
+        map[12][8] = AMOGUS;
+    }
     FILE *file = fopen(name,"w");
     for (int i = 0; i < 16; i++){
         for (int j = 0; j < 16; j++) {
@@ -191,6 +198,6 @@ void load_maps(void) {
     for (int i = 0; i < 8; i++){
         int map[16][16];
         load_raw(map, raws[i]);
-        write_map(map, maps[i]);
+        write_map(map, maps[i], i);
     }
 }
