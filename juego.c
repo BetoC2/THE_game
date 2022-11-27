@@ -19,7 +19,6 @@ struct player{
     int timer_atack;
     int timer_awas;
     Camera2D camara;
-    Texture2D sprite;
 };
 
 struct wall{
@@ -114,14 +113,16 @@ Player* create_player(Vector2* v){
     jugador->facing = 3;
     jugador->arma = hitbox_arma(jugador->facing, jugador->hitbox.x, jugador->hitbox.y);
     jugador->awas = new_list();
-    //jugador->sprite = sprite;
 
     return jugador;
 }
 
-void draw_player(Player* p){
+void draw_player(Player* p, Texture2D sprite){
     if(p->timer_atack > FPS)
         DrawRectangleRec(p->arma, ORANGE);
+
+    //p.facing
+    //usar p.timer_attack
 
     if(p->timer_damage % 16 > 8 || p->timer_damage < 16)
         DrawRectangleRec(p->hitbox,LIGHTGRAY);
@@ -146,6 +147,7 @@ void move_player(Player* p){
     if(IsKeyDown(KEY_D) && p->side[0] != 4 && p->side[1] != 4) p->hitbox.x += p->speed;    //Derecha
 
     if(IsKeyDown(KEY_W)) p->facing = 1;
+
     if(IsKeyDown(KEY_S)) p->facing = 3;
     if(IsKeyDown(KEY_D)) p->facing = 2;
     if(IsKeyDown(KEY_A)) p->facing = 4;

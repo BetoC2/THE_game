@@ -212,7 +212,7 @@ void rooms_insert_decoration(int matrix[64][64]){
     for (int i = 0; i < 64; i++){
         for (int j = 0; j < 64; j++) {
             int prob = rand() % 100;
-            if (prob < 5 && (matrix[i][j] == FLOOR || matrix[i][j] == FLOOR_SPAWN)) {
+            if (prob < 12 && (matrix[i][j] == FLOOR || matrix[i][j] == FLOOR_SPAWN)) {
                 short random = rand() % 4;
                 switch (random) {
                     case 0:
@@ -276,9 +276,15 @@ void create_texture_bridge(Texture2D sprite, int x, int y, Vector2 victor){
     Rectangle recto = {x * TILE, y * TILE, (float)spr.width / 25, (float)spr.height / 22};
     DrawTextureRec(spr, recto, victor, WHITE);
 }
+
+void create_texture_decor(Texture2D sprite, int x, int y, Vector2 victor){
+    Texture2D spr = sprite;
+    Rectangle recto = {x * TILE, y * TILE, (float)spr.width / 10, (float)spr.height / 10};
+    DrawTextureRec(spr, recto, victor, WHITE);
+}
 //Dibujo solo para que se vea shido, puede reusarse para pruebas
 
-void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_b){
+void map_draw(int matrix[64][64], Texture2D sprite){
     Vector2 victor;
     for (int y = 0; y < 64; y++){
         for (int x = 0; x < 64; x++){
@@ -287,68 +293,6 @@ void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_b){
                 case FLOOR:
                 case FLOOR_SPAWN:
                     create_texture_wall(sprite, 2, 30, victor);
-                    break;
-
-                case L_FBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 11, 14, victor);
-                    break;
-                case H_FBRIDGE:
-                    create_texture_wall(sprite, 2, 2, victor);
-                    create_texture_bridge(sprite_b, 12, 14, victor);
-                    break;
-                case R_FBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 10, 14, victor);
-                    break;
-                case U_FBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 15, 18, victor);
-                    break;
-                case V_FBRIDGE:
-                    create_texture_wall(sprite, 2, 2, victor);
-                    create_texture_bridge(sprite_b, 15, 19, victor);
-                    break;
-                case D_FBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 15, 20, victor);
-                    break;
-
-                case L_WBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 11, 13, victor);
-                    break;
-                case H_WBRIDGE:
-                    create_texture_wall(sprite, 2, 2, victor);
-                    create_texture_bridge(sprite_b, 12, 13, victor);
-                    break;
-                case R_WBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 10, 13, victor);
-                    break;
-                case LU_WBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 14, 18, victor);
-                    break;
-                case LV_WBRIDGE:
-                    create_texture_wall(sprite, 2, 2, victor);
-                    create_texture_bridge(sprite_b, 14, 19, victor);
-                    break;
-                case LD_WBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 14, 20, victor);
-                    break;
-                case RU_WBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 16, 18, victor);
-                    break;
-                case RV_WBRIDGE:
-                    create_texture_wall(sprite, 2, 2, victor);
-                    create_texture_bridge(sprite_b, 16, 19, victor);
-                    break;
-                case RD_WBRIDGE_END:
-                    create_texture_wall(sprite, 2, 30, victor);
-                    create_texture_bridge(sprite_b, 16, 20, victor);
                     break;
 
                 case L_WALL:
@@ -442,18 +386,128 @@ void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_b){
                 case QZPM_EDGE:
                     create_texture_wall(sprite, 12, 2, victor);
                     break;
+                case MUSH_LCORNER:
+                    create_texture_wall(sprite, 10, 2, victor);
+                    break;
+                case MUSH_RCORNER:
+                    create_texture_wall(sprite, 9, 2, victor);
+                    break;
+                case AMOGUS:
+                    create_texture_wall(sprite, 11, 1, victor);
+                    break;
+                case AMOGUS2:
+                    create_texture_wall(sprite, 10, 2, victor);
+                    break;
+                case AMOGUS3:
+                    create_texture_wall(sprite, 10, 4, victor);
+                    break;
+                case AMOGUS4:
+                    create_texture_wall(sprite, 10, 3, victor);
+                    break;
 
                 case WALL:
                     create_texture_wall(sprite, 2, 2, victor);
-                    //DrawRectangle(x * TILE, y * TILE, TILE, TILE, SKYBLUE);
                     break;
 
                 default:
                     DrawRectangle(x * TILE, y * TILE, TILE, TILE, PINK);
                     break;
             }
-            //DrawTextureRec(sprite,recto, victor, WHITE);
-            //DrawRectangle(vector.x * TILE, vector.y * TILE, TILE, TILE, RED);
+        }
+    }
+}
+
+
+void map_draw_bridges(int matrix[64][64], Texture2D sprite, Texture2D sprite_b){
+    Vector2 victor;
+    for (int y = 0; y < 64; y++){
+        for (int x = 0; x < 64; x++){
+            victor = (Vector2){x * TILE,y * TILE};
+            switch (matrix[y][x]) {
+                case L_FBRIDGE_END:
+                    create_texture_bridge(sprite_b, 11, 14, victor);
+                    break;
+                case H_FBRIDGE:
+                    create_texture_bridge(sprite_b, 12, 14, victor);
+                    break;
+                case R_FBRIDGE_END:
+                    create_texture_bridge(sprite_b, 10, 14, victor);
+                    break;
+                case U_FBRIDGE_END:
+                    create_texture_bridge(sprite_b, 15, 18, victor);
+                    break;
+                case V_FBRIDGE:
+                    create_texture_bridge(sprite_b, 15, 19, victor);
+                    break;
+                case D_FBRIDGE_END:
+                    create_texture_bridge(sprite_b, 15, 20, victor);
+                    break;
+                case L_WBRIDGE_END:
+                    create_texture_bridge(sprite_b, 11, 13, victor);
+                    break;
+                case H_WBRIDGE:
+                    create_texture_bridge(sprite_b, 12, 13, victor);
+                    break;
+                case R_WBRIDGE_END:
+                    create_texture_bridge(sprite_b, 10, 13, victor);
+                    break;
+                case L_WEND:
+                    create_texture_bridge(sprite_b, 11, 14, victor);
+                    create_texture_bridge(sprite_b, 11, 13, victor);
+                    break;
+                case H_DFLOOR:
+                    create_texture_bridge(sprite_b, 12, 14, victor);
+                    create_texture_bridge(sprite_b, 12, 13, victor);
+                    break;
+                case R_WEND:
+                    create_texture_bridge(sprite_b, 10, 14, victor);
+                    create_texture_bridge(sprite_b, 10, 13, victor);
+                    break;
+
+                case LU_WBRIDGE_END:
+                    create_texture_bridge(sprite_b, 14, 18, victor);
+                    break;
+                case LV_WBRIDGE:
+                    create_texture_bridge(sprite_b, 14, 19, victor);
+                    break;
+                case LD_WBRIDGE_END:
+                    create_texture_bridge(sprite_b, 14, 20, victor);
+                    break;
+                case RU_WBRIDGE_END:
+                    create_texture_bridge(sprite_b, 16, 18, victor);
+                    break;
+                case RV_WBRIDGE:
+                    create_texture_bridge(sprite_b, 16, 19, victor);
+                    break;
+                case RD_WBRIDGE_END:
+                    create_texture_bridge(sprite_b, 16, 20, victor);
+                    break;
+
+                case GRASS:
+                    create_texture_decor(sprite, 2, 1, victor);
+                    break;
+                case PATH_1:
+                    create_texture_decor(sprite, 4, 1, victor);
+                    break;
+                case PATH_2:
+                    create_texture_decor(sprite, 5, 1, victor);
+                    break;
+                case PATH_3:
+                    create_texture_decor(sprite, 4, 2, victor);
+                    break;
+                case PATH_4:
+                    create_texture_decor(sprite, 5, 2, victor);
+                    break;
+                case BMUSH:
+                    create_texture_decor(sprite, 6, 1, victor);
+                    break;
+                case RMUSH:
+                    create_texture_decor(sprite, 8, 1, victor);
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

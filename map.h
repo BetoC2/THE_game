@@ -6,7 +6,8 @@
 #define SPAWN_RATE 2
 
 void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector);
-void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_dos);
+void map_draw(int matrix[64][64], Texture2D sprite);
+void map_draw_bridges(int matrix[64][64], Texture2D sprite, Texture2D sprite_b);
 
 //Decoration
 #define GRASS 15

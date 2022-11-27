@@ -11,9 +11,11 @@ int main(void)
     srand(time(NULL));
     SetTargetFPS(FPS);           // Poner el juego a 60 frames
 
-    Texture2D sprite_w, sprite_d;
-    sprite_w = LoadTexture("../forest.png");
-    sprite_d = LoadTexture("../forestDecoration.png");
+    Texture2D sprite_w, sprite_d, sprite_p, sprite_decor;
+    sprite_w = LoadTexture("../assets/forest.png");
+    sprite_d = LoadTexture("../assets/forestDecoration.png");
+    sprite_p = LoadTexture("../assets/player.png");
+    sprite_decor = LoadTexture("../assets/decoration.png");
 
     //Creación del mapa al azar
     int map[64][64];
@@ -58,11 +60,12 @@ int main(void)
 
         ClearBackground(WATER);
 
-        map_draw(bridges,  sprite_w, sprite_d);
+        map_draw(map,  sprite_w);
+        map_draw_bridges(bridges, sprite_decor, sprite_d);
         //draw_floor(suelo);
         //draw_walls(paredes);
         //draw_enemies(enemigos);
-        draw_player(jugador);
+        draw_player(jugador, sprite_p);
         draw_awa(awas_tiradas);
 
         EndMode2D();

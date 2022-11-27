@@ -11,7 +11,7 @@ void manage_awa(List* l, Player* p);
 
 // JUGADOR
 Player* create_player(Vector2* v);
-void draw_player(Player* p);
+void draw_player(Player* p,Texture2D sprite);
 int manage_player(Player* p);
 
 //PAREDES
