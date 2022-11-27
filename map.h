@@ -9,9 +9,13 @@ void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector);
 void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_dos);
 
 //Fix textures
-#define MUSH_RCORNER 18
-#define MUSH_LCORNER 17
-#define AMOGUS 16
+#define MUSH_RCORNER 21
+#define MUSH_LCORNER 20
+#define AMOGUS 19
+#define AMOGUS2 18
+#define AMOGUS3 17
+#define AMOGUS4 16
+
 
 //Decoration
 #define GRASS 15

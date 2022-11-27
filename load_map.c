@@ -163,6 +163,9 @@ void write_map(int map[16][16], char *name, int index){
     }
     if (index == 5){
         map[12][8] = AMOGUS;
+        map[12][3] = AMOGUS2;
+        map[3][13] = AMOGUS3;
+        map[8][13] = AMOGUS4;
     }
     FILE *file = fopen(name,"w");
     for (int i = 0; i < 16; i++){
