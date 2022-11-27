@@ -159,21 +159,21 @@ void rooms_connect_right(int matrix[64][64], int x, int y){
     matrix[y_index-1][x_start] = L_WBRIDGE_END;
     matrix[y_index][x_start] = L_FBRIDGE_END;
     matrix[y_index+1][x_start] = L_FBRIDGE_END;
-    matrix[y_index+2][x_start] =  L_WBRIDGE_END;
+    matrix[y_index+2][x_start] =  L_WEND;
     x_start++;
 
     while (x_start < x_final){
         matrix[y_index-1][x_start] = H_WBRIDGE;
         matrix[y_index][x_start] = H_FBRIDGE;
         matrix[y_index+1][x_start] = H_FBRIDGE;
-        matrix[y_index+2][x_start] =  H_WBRIDGE;
+        matrix[y_index+2][x_start] =  H_DFLOOR;
         x_start++;
     }
 
     matrix[y_index-1][x_start] = R_WBRIDGE_END;
     matrix[y_index][x_start] = R_FBRIDGE_END;
     matrix[y_index+1][x_start] = R_FBRIDGE_END;
-    matrix[y_index+2][x_start] =  R_WBRIDGE_END;
+    matrix[y_index+2][x_start] =  R_WEND;
 }
 
 void rooms_connect_down(int matrix[64][64], int x, int y){
