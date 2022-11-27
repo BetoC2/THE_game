@@ -8,15 +8,6 @@
 void map_generate(int matrix[64][64], int bridges[64][64], Vector2 *vector);
 void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_dos);
 
-//Fix textures
-#define MUSH_RCORNER 21
-#define MUSH_LCORNER 20
-#define AMOGUS 19
-#define AMOGUS2 18
-#define AMOGUS3 17
-#define AMOGUS4 16
-
-
 //Decoration
 #define GRASS 15
 #define PATH_1 14
@@ -58,37 +49,45 @@ void map_draw(int matrix[64][64], Texture2D sprite, Texture2D sprite_dos);
 #define D_WALL (-14)
 #define LUD_WALL (-15)
 
+//Fix textures
+#define MUSH_RCORNER (-16)
+#define MUSH_LCORNER (-17)
+#define AMOGUS (-18)
+#define AMOGUS2 (-19)
+#define AMOGUS3 (-20)
+#define AMOGUS4 (-21)
+
 //Horizontal bridge walls
-#define R_WBRIDGE_END (-16)
-#define L_WBRIDGE_END (-17)
-#define H_WBRIDGE (-18)
-#define L_WEND (-19)
-#define H_DFLOOR (-20)
-#define R_WEND (-21)
+#define R_WBRIDGE_END (-22)
+#define L_WBRIDGE_END (-23)
+#define H_WBRIDGE (-24)
+#define L_WEND (-25)
+#define H_DFLOOR (-26)
+#define R_WEND (-27)
 
 //Vertical bridge walls
-#define LU_WBRIDGE_END (-22)
-#define RU_WBRIDGE_END (-23)
-#define LD_WBRIDGE_END (-24)
-#define RD_WBRIDGE_END (-25)
-#define LV_WBRIDGE (-26)
-#define RV_WBRIDGE (-27)
+#define LU_WBRIDGE_END (-28)
+#define RU_WBRIDGE_END (-29)
+#define LD_WBRIDGE_END (-30)
+#define RD_WBRIDGE_END (-31)
+#define LV_WBRIDGE (-32)
+#define RV_WBRIDGE (-33)
 
 //Edges >:(
-#define Q_EDGE (-28)
-#define Z_EDGE (-29)
-#define P_EDGE (-30)
-#define M_EDGE (-31)
-#define QZ_EDGE (-32)
-#define QP_EDGE (-33)
-#define QM_EDGE (-34)
-#define ZP_EDGE (-35)
-#define ZM_EDGE (-36)
-#define PM_EDGE (-37)
-#define QZP_EDGE (-38)
-#define QZM_EDGE (-39)
-#define ZPM_EDGE (-40)
-#define QPM_EDGE (-41)
-#define QZPM_EDGE (-42)
+#define Q_EDGE (-34)
+#define Z_EDGE (-35)
+#define P_EDGE (-36)
+#define M_EDGE (-37)
+#define QZ_EDGE (-38)
+#define QP_EDGE (-39)
+#define QM_EDGE (-40)
+#define ZP_EDGE (-41)
+#define ZM_EDGE (-42)
+#define PM_EDGE (-43)
+#define QZP_EDGE (-44)
+#define QZM_EDGE (-45)
+#define ZPM_EDGE (-46)
+#define QPM_EDGE (-47)
+#define QZPM_EDGE (-48)
 
 #endif //GAME_MAP_H
