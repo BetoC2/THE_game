@@ -45,9 +45,11 @@ int main(void)
         chocar_paredes( jugador, paredes);
         manage_awa(awas_tiradas, jugador);
         se_perdio = manage_player(jugador);
+        if(manage_enemies(jugador, enemigos, awas_tiradas))
+            break;
+
         if(se_perdio)
             break;
-        manage_enemies(jugador, enemigos, awas_tiradas);
 
 
 
