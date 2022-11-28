@@ -9,6 +9,7 @@ struct player{
     Rectangle hitbox;   // Ubicación y colisión
     Rectangle arma;     // hitbox del ataque
     int vida;           // Vida en medios corazones
+    int max_vida;
     int side[2];        // Posiciones a donde no avanzar (para paredes)
     float speed;        // Velocidad (pixeles x frames)
     int damage;
@@ -23,8 +24,6 @@ struct player{
 
 struct wall{
     Rectangle hitbox;   // Posición y zona de colisión
-    //Sprite ??         // Futuro sprite
-    //Vector2D          //Posicion dentro del sprite
 };
 
 struct enemy{
@@ -41,7 +40,7 @@ struct enemy{
 struct awas{
     int sabor;
     Rectangle ubicacion;
-    Texture2D Sprite;
+    Rectangle sprite;
 };
 
 struct floor{
@@ -58,19 +57,20 @@ List* spawn_awas(Vector2* v){
     List* l = new_list();
     AwasdeSabor* a = malloc(sizeof(AwasdeSabor));
 
-    a->sabor = rand()%3 + 1;
+    a->sabor = rand()%4 + 1;
     a->ubicacion = create_hitbox((v->x + 7) * SIZE, v->y * SIZE);
+    a->sprite = create_hitbox(0, (float)(a->sabor - 1) * 16);
     list_add(l,a);
 
     return l;
 
 };
 
-void draw_awa(List* l){
-
+void draw_awa(List* l, Texture2D spr){
     for(int i = 0; i < list_size(l); i++){
         AwasdeSabor* a = list_get(l,i);
-        DrawRectangleRec(a->ubicacion, YELLOW);
+        Vector2 v = {a->ubicacion.x, a->ubicacion.y};
+        DrawTextureRec(spr, a->sprite, v, WHITE);
     }
 }
 
@@ -89,8 +89,9 @@ void manage_awa(List* l, Player* p){
 
 void drop_awa(List* l, Rectangle r){
     AwasdeSabor* a = malloc(sizeof(AwasdeSabor));
-    a->sabor = rand()%3 + 1;
+    a->sabor = rand()%4 + 1;
     a->ubicacion = r;
+    a->sprite = create_hitbox(0, (float)(a->sabor - 1) * 16);
 
     list_add(l, a);
 }
@@ -99,18 +100,23 @@ void drop_awa(List* l, Rectangle r){
 // JUGADOR
 Player* create_player(Vector2* v){
     Player* jugador = malloc(sizeof(Player));
-    jugador->hitbox = create_hitbox(v->x * SIZE,v->y * SIZE);
+
+    jugador->hitbox = (Rectangle){v->x * SIZE, v->y * SIZE, SIZE - 2, SIZE - 2};
 
     jugador->vida = 5;
+    jugador->max_vida = 5;
     jugador->speed = velocidad(3.5f);
     jugador->damage = 1;
+
     jugador->side[0] = 0;
     jugador->side[1] = 0;
     jugador->state = 0;
+    jugador->facing = 3;
+
     jugador->timer_atack = 0;
     jugador->timer_damage = 0;
     jugador->timer_awas = 0;
-    jugador->facing = 3;
+
     jugador->arma = hitbox_arma(jugador->facing, jugador->hitbox.x, jugador->hitbox.y);
     jugador->awas = new_list();
 
@@ -121,22 +127,8 @@ void draw_player(Player* p, Texture2D sprite){
     if(p->timer_atack > FPS)
         DrawRectangleRec(p->arma, ORANGE);
 
-    //p.facing
-    //usar p.timer_attack
-
     if(p->timer_damage % 16 > 8 || p->timer_damage < 16)
         DrawRectangleRec(p->hitbox,LIGHTGRAY);
-
-    if(list_size(p->awas)) {
-
-        AwasdeSabor *a = list_peek(p->awas);
-        Color awa = !a->sabor ? WHITE : a->sabor == 1 ? RED : a->sabor == 2 ? GREEN : BLUE;
-
-        DrawCircle(p->hitbox.x + 150, p->hitbox.y - 86, SIZE/2.0, awa);
-    }
-
-    for(int i = 0; i < p->vida; i++)
-        DrawCircle(p->hitbox.x + SIZE * (i * 1.1)  - 150, p->hitbox.y - 86, SIZE/2.0, RED);
 
 }   //ESTO SE VA A CAMBIAR
     //cosas de manage
@@ -182,40 +174,36 @@ void ataque_player(Player* p){
 }
 
 void use_awas(Player* p){
-    if(IsKeyDown(KEY_LEFT_SHIFT) && !p->timer_awas && list_size(p->awas)){
+    int use = IsKeyDown(KEY_LEFT_SHIFT) || IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN);
+
+    if( use && !p->timer_awas && list_size(p->awas)){
         AwasdeSabor* a = list_pop(p->awas);
         p->timer_damage += FPS / 2;
         p->timer_atack += FPS / 2;
 
-        if(a->sabor == 1)
-            p->vida += 3;
-
-        if(a->sabor == 2){
-            p->speed += velocidad(2.5f);
-            p->timer_awas += FPS * 6;
+        switch (a->sabor) {
+            case 1:
+                p->vida = p->max_vida;
+                break;
+            case 2:
+                p->speed += velocidad(2.5f);
+                p->timer_awas += FPS * 6;
+                break;
+            case 3:
+                p->damage += 2;
+                p->timer_awas += FPS * 5;
+                break;
+            case 4:
+                if(p->vida < 4)
+                    p->vida += 1;
+                else if (p->vida == 4)
+                    p->vida += 2;
+                else
+                    p->vida += 3;
+                break;
         }
-        if(a->sabor == 3){
-            p->damage += 2;
-            p->timer_awas += FPS * 5;
-        }
-    }
 
-    if(IsGamepadButtonPressed(0, GAMEPAD_BUTTON_RIGHT_FACE_DOWN) && !p->timer_awas && list_size(p->awas)){
-        AwasdeSabor* a = list_pop(p->awas);
-        p->timer_damage += FPS / 2;
-        p->timer_atack += FPS / 2;
 
-        if(a->sabor == 1)
-            p->vida += 3;
-
-        if(a->sabor == 2){
-            p->speed += velocidad(2.5f);
-            p->timer_awas += FPS * 6;
-        }
-        if(a->sabor == 3){
-            p->damage += 2;
-            p->timer_awas += FPS * 5;
-        }
     }
 
     if(p->timer_awas){
@@ -267,12 +255,6 @@ List* crate_walls(int map[64][64]){
     return l;
 }   //ESTO USA LA MATRIZ POR GENERACIÓN DE BETO
 
-void draw_walls(List* l){
-    for(int i = 0; i < list_size(l); i++){
-        Wall* w = list_get(l, i);
-        DrawRectangleRec(w->hitbox,DARKBLUE);
-    }
-}
     //cosas de manage
 void chocar_paredes(Player* p, List* w) {
 
@@ -303,26 +285,27 @@ void chocar_paredes(Player* p, List* w) {
 
 //ENEMIGOS
 void asign_stats(Enemy* e){
-    float r = (float)(rand()%5 -2)/10;
+    float r = (float)(rand()%7 -3)/10;
+    float r_2 = (float)(rand()%7 -3)/10;
 
     switch (e->type) {
         case 1: //Pequeño y rápido
             e->vida = 4;
             e->speed = velocidad(2.65f + r);
             e->damage = 1;
-            e->vision = 3.5f + r;
+            e->vision = 3.5f + r_2;
             break;
         case 2: //Tanque agresivo
             e->vida = 8;
             e->speed = velocidad(1 + r);
             e->damage = 2;
-            e->vision = 6 + r;
+            e->vision = 6 + r_2;
             break;
         default:    //Por defecto e inutil XD
             e->vida = 1;
             e->speed = velocidad(0.5f + r);
             e->damage = 0;
-            e->vision = 0.5f + r;
+            e->vision = 0.5f + r_2;
     }
 }
 
@@ -415,41 +398,12 @@ void manage_enemies(Player* p, List* l, List* a){
 }
 
 
-List* crear_suelo(int map[64][64]){
-    List* l = new_list();
-
-    for (int i = 0; i < 64; ++i) {      //i = y
-        for (int j = 0; j < 64; ++j) {      //j = x
-            Floor* f = malloc(sizeof(Wall));
-            if(map[i][j] >= WALL && map[i][j] <= GRASS || map[i][j] <= Q_EDGE){
-                f->tipo = map[i][j];
-                f->place = create_hitbox((float)j * SIZE, (float)i * SIZE);
-                list_add(l,f);
-            }
-        }
-    }
-
-    return l;
-};
-
-void draw_floor(List* l){
-    Color c;
-
-    for (int i = 0; i < list_size(l); ++i) {
-        Floor * f = list_get(l, i);
-        c = f->tipo == WALL? SKYBLUE: f->tipo <= Q_EDGE? BLUE: GREEN;
-        DrawRectangleRec(f->place, c);
-    }
-}
-
-
-
 //CAMARA
 Camera2D crear_camara(Player* p){
     Camera2D c;
-    c.zoom = 48.0f / SIZE;    // El primer número es el tamaño mostrado en pixeles
+    c.zoom = 48.0f / SIZE;    // El primer número es el tamaño mostrado en pixeles de size
     c.rotation = 0;
-    c.offset = (Vector2){S_WIDHT/2.0 - SIZE/2.0 * c.zoom , S_HEIGHT/2.0 - SIZE/2.0 * c.zoom};
+    c.offset = (Vector2){S_WIDHT/2.0 - (SIZE-2)/2.0 * c.zoom , S_HEIGHT/2.0 - (SIZE-2)/2.0 * c.zoom};
     update_camara(p, &c);
 
     return c;
@@ -457,6 +411,30 @@ Camera2D crear_camara(Player* p){
 
 void update_camara(Player* p, Camera2D* c){
     c->target = (Vector2){p->hitbox.x,p->hitbox.y};
+}
+
+
+void draw_stats(Player* p, Texture2D spr, Camera2D c){
+
+    Vector2 v;
+    float esquina_x = p->hitbox.x + (S_WIDHT/SIZE /2 - 2)/c.zoom * SIZE;
+    float esquina_y =  p->hitbox.y - (S_HEIGHT/SIZE /2 - 2)/c.zoom * SIZE;
+
+    if(list_size(p->awas)) {
+        AwasdeSabor *a = list_peek(p->awas);
+        v = (Vector2){esquina_x,esquina_y};
+        DrawTextureRec(spr, a->sprite, v, WHITE);
+    }
+
+    for(int i = 0; i < p->vida; i++) {
+        int cora = i < p->max_vida? 4: 5;
+        Rectangle r = create_hitbox(0, cora * 16);
+        esquina_x =  p->hitbox.x - (S_WIDHT/SIZE /2 - 2 - i* c.zoom)/c.zoom * SIZE;
+        v = (Vector2){esquina_x, esquina_y};
+        DrawTextureRec(spr, r, v, WHITE);
+    }
+
+
 }
 
 
