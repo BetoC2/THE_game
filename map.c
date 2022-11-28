@@ -201,9 +201,14 @@ void rooms_connect_down(int matrix[64][64], int x, int y){
         y_start++;
     }
     matrix[y_start][x_index-1] = LD_WBRIDGE_END;
+    matrix[y_start][x_index] = V_FBRIDGE;
+    matrix[y_start][x_index+1] = V_FBRIDGE;
+    matrix[y_start][x_index+2] = RD_WBRIDGE_END;
+
+    y_start++;
+
     matrix[y_start][x_index] = D_FBRIDGE_END;
     matrix[y_start][x_index+1] = D_FBRIDGE_END;
-    matrix[y_start][x_index+2] = RD_WBRIDGE_END;
 }
 
 void rooms_insert_decoration(int matrix[64][64]){
