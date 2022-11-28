@@ -287,10 +287,13 @@ void create_texture_decor(Texture2D sprite, int x, int y, Vector2 victor){
     Rectangle recto = {x * TILE, y * TILE, (float)spr.width / 10, (float)spr.height / 10};
     DrawTextureRec(spr, recto, victor, WHITE);
 }
-//Dibujo solo para que se vea shido, puede reusarse para pruebas
 
-void map_draw(int matrix[64][64], Texture2D sprite){
+void map_draw(int matrix[64][64], Texture2D sprite, int *temp){
     Vector2 victor;
+    int h = (*temp / 30) * 7;
+    (*temp)++;
+    *temp = *temp == 120 ? 0: *temp;
+    
     for (int y = 0; y < 64; y++){
         for (int x = 0; x < 64; x++){
             victor = (Vector2){x * TILE,y * TILE};
@@ -301,121 +304,117 @@ void map_draw(int matrix[64][64], Texture2D sprite){
                     break;
 
                 case L_WALL:
-                    create_texture_wall(sprite, 1, 2, victor);
+                    create_texture_wall(sprite, 1, 2 + h, victor);
                     break;
                 case LR_WALL:
-                    create_texture_wall(sprite, 4, 2, victor);
+                    create_texture_wall(sprite, 4, 2 + h, victor);
                     break;
                 case LU_WALL:
-                    create_texture_wall(sprite, 1, 1, victor);
+                    create_texture_wall(sprite, 1, 1 + h, victor);
                     break;
                 case LD_WALL:
-                    create_texture_wall(sprite, 1, 3, victor);
+                    create_texture_wall(sprite, 1, 3 + h, victor);
                     break;
                 case LRU_WALL:
-                    create_texture_wall(sprite, 4, 1, victor);
+                    create_texture_wall(sprite, 4, 1 + h, victor);
                     break;
                 case LRD_WALL:
-                    create_texture_wall(sprite, 4, 3, victor);
+                    create_texture_wall(sprite, 4, 3 + h, victor);
                     break;
                 case LRUD_WALL:
-                    create_texture_wall(sprite, 4, 4, victor);
+                    create_texture_wall(sprite, 4, 4 + h, victor);
                     break;
                 case R_WALL:
-                    create_texture_wall(sprite, 3, 2, victor);
+                    create_texture_wall(sprite, 3, 2 + h, victor);
                     break;
                 case RU_WALL:
-                    create_texture_wall(sprite, 3, 1, victor);
+                    create_texture_wall(sprite, 3, 1 + h, victor);
                     break;
                 case RD_WALL:
-                    create_texture_wall(sprite, 3, 3, victor);
+                    create_texture_wall(sprite, 3, 3 + h, victor);
                     break;
                 case RUD_WALL:
-                    create_texture_wall(sprite, 3, 4, victor);
+                    create_texture_wall(sprite, 3, 4 + h, victor);
                     break;
                 case U_WALL:
-                    create_texture_wall(sprite, 2, 1, victor);
+                    create_texture_wall(sprite, 2, 1 + h, victor);
                     break;
                 case UD_WALL:
-                    create_texture_wall(sprite, 2, 4, victor);
+                    create_texture_wall(sprite, 2, 4 + h, victor);
                     break;
                 case D_WALL:
-                    create_texture_wall(sprite, 2, 3, victor);
+                    create_texture_wall(sprite, 2, 3 + h, victor);
                     break;
                 case LUD_WALL:
-                    create_texture_wall(sprite, 1, 4, victor);
+                    create_texture_wall(sprite, 1, 4 + h, victor);
                     break;
 
                 case Q_EDGE:
-                    create_texture_wall(sprite, 6, 2, victor);
+                    create_texture_wall(sprite, 6, 2 + h, victor);
                     break;
                 case Z_EDGE:
-                    create_texture_wall(sprite, 6, 1, victor);
+                    create_texture_wall(sprite, 6, 1 + h, victor);
                     break;
                 case P_EDGE:
-                    create_texture_wall(sprite, 5, 2, victor);
+                    create_texture_wall(sprite, 5, 2 + h, victor);
                     break;
                 case M_EDGE:
-                    create_texture_wall(sprite, 5, 1, victor);
+                    create_texture_wall(sprite, 5, 1 + h, victor);
                     break;
                 case QZ_EDGE:
-                    create_texture_wall(sprite, 7, 2, victor);
+                    create_texture_wall(sprite, 7, 2 + h, victor);
                     break;
                 case QP_EDGE:
-                    create_texture_wall(sprite, 6, 4, victor);
+                    create_texture_wall(sprite, 6, 4 + h, victor);
                     break;
                 case QM_EDGE:
-                    create_texture_wall(sprite, 7, 1, victor);
+                    create_texture_wall(sprite, 7, 1 + h, victor);
                     break;
                 case ZP_EDGE:
-                    create_texture_wall(sprite, 8, 1, victor);
+                    create_texture_wall(sprite, 8, 1 + h, victor);
                     break;
                 case ZM_EDGE:
-                    create_texture_wall(sprite, 6, 3, victor);
+                    create_texture_wall(sprite, 6, 3 + h, victor);
                     break;
                 case PM_EDGE:
-                    create_texture_wall(sprite, 8, 2, victor);
+                    create_texture_wall(sprite, 8, 2 + h, victor);
                     break;
                 case QZP_EDGE:
-                    create_texture_wall(sprite, 7, 3, victor);
+                    create_texture_wall(sprite, 7, 3 + h, victor);
                     break;
                 case QZM_EDGE:
-                    create_texture_wall(sprite, 7, 4, victor);
+                    create_texture_wall(sprite, 7, 4 + h, victor);
                     break;
                 case ZPM_EDGE:
-                    create_texture_wall(sprite, 8, 4, victor);
+                    create_texture_wall(sprite, 8, 4 + h, victor);
                     break;
                 case QPM_EDGE:
-                    create_texture_wall(sprite, 8, 3, victor);
+                    create_texture_wall(sprite, 8, 3 + h, victor);
                     break;
                 case QZPM_EDGE:
-                    create_texture_wall(sprite, 12, 2, victor);
+                    create_texture_wall(sprite, 12, 2 + h, victor);
                     break;
                 case MUSH_LCORNER:
-                    create_texture_wall(sprite, 10, 2, victor);
+                    create_texture_wall(sprite, 10, 2 + h, victor);
                     break;
                 case MUSH_RCORNER:
-                    create_texture_wall(sprite, 9, 2, victor);
+                    create_texture_wall(sprite, 9, 2 + h, victor);
                     break;
                 case AMOGUS:
-                    create_texture_wall(sprite, 11, 1, victor);
+                    create_texture_wall(sprite, 11, 1 + h, victor);
                     break;
                 case AMOGUS2:
-                    create_texture_wall(sprite, 10, 2, victor);
+                    create_texture_wall(sprite, 10, 2 + h, victor);
                     break;
                 case AMOGUS3:
-                    create_texture_wall(sprite, 10, 4, victor);
+                    create_texture_wall(sprite, 10, 4 + h, victor);
                     break;
                 case AMOGUS4:
-                    create_texture_wall(sprite, 10, 3, victor);
+                    create_texture_wall(sprite, 10, 3 + h, victor);
                     break;
 
                 case WALL:
-                    create_texture_wall(sprite, 2, 2, victor);
-                    break;
-
-                default:
-                    DrawRectangle(x * TILE, y * TILE, TILE, TILE, PINK);
+                    create_texture_wall(sprite, 2, 2 + h, victor);
                     break;
             }
         }

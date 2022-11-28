@@ -21,6 +21,7 @@ int main(void)
     //Creación del mapa al azar
     int map[64][64];
     int bridges[64][64];
+    int water_temp = 0;
     Vector2 initial_position;
     map_generate(map, bridges, &initial_position);
 
@@ -59,7 +60,7 @@ int main(void)
 
         ClearBackground(WATER);
 
-        map_draw(map,  sprite_w);
+        map_draw(map,  sprite_w, &water_temp);
         map_draw_bridges(bridges, sprite_decor, sprite_d);
         draw_enemies(enemigos);
         draw_awa(awas_tiradas, sprite_stats);
