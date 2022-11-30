@@ -58,7 +58,7 @@ void rooms_generate(int rooms[4][4]){
 
     int x = rand() % 4;
     int y = rand() % 4;
-    int rep = rand() % 3;
+    int rep = rand() % 4;
     rooms_fill(rooms, x, y, 7+rep);
 }
 
