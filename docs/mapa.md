@@ -84,7 +84,7 @@ Después se llama a la función ```rooms_fill(rooms, x, y, 7+(0 a 3)) ``` para c
 
     Lo siguiente que se hace es generar un número aleatorio entre 0 y 3, para entrar en un switch que revisa cada caso. Para el switch se utilizó una función auxiliar llamada ```room_is_inside(x, y)```, que revisa si la posición no se sale de la matriz. Si el número aleatorio es 0, se le resta 1 a la posición "x", si es 1, se le suma 1 a "x", si es 2, se resta 1 a "y", si es 3, se suma 1 a "y". Notese que si la posición en "x" o "y" es mayor a la dimensión de la matriz, no se hará nada.
 
-    ![rooms](/images/rooms.gif)
+    ![rooms](./images/rooms.gif)
 
 Una vez que se tiene la matriz con los cuartos, se llama a la función ```rooms_insert(matrix, rooms, vector)```, que toma como argumento la matriz del mapa y de los puentes y el apuntador del vector.
 
