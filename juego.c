@@ -46,8 +46,7 @@ struct enemy{
     int damage;
     float vision;       // Distancia (en tiles) de seguimiento
     int timer;          //Evita recibir mucho daño
-    Texture2D sprite;            // Futuro sprite
-
+    int facing;
     int timer_extra;
 };
 
@@ -78,7 +77,6 @@ void draw_stats(Player* p, Texture2D spr, Camera2D c){
 
 
 //AWAS
-
 List* spawn_awas(Vector2* v){
     List* l = new_list();
     AwasdeSabor* a = malloc(sizeof(AwasdeSabor));
@@ -149,9 +147,12 @@ Player* create_player(Vector2* v){
     return jugador;
 }
 
-void draw_player(Player* p, Texture2D sprite){
+void draw_player(Player* p, Texture2D sprite, Texture2D hit){
+    Rectangle r = {0,(p->facing - 1) * SIZE * 2,SIZE * 2,SIZE * 2};
+    Vector2 v = {p->arma.x, p->arma.y};
+
     if(p->timer_atack > FPS)
-        DrawRectangleRec(p->arma, ORANGE);
+        DrawTextureRec(hit, r, v, WHITE);
 
     if(p->timer_damage % 16 > 8 || p->timer_damage < 16)
         DrawRectangleRec(p->hitbox,WHITE);
@@ -233,6 +234,7 @@ void use_awas(Player* p){
                 break;
         }
 
+        p->vida = p->vida > 10? 10: p->vida;
 
     }
 
@@ -349,6 +351,7 @@ List* summon_enemies(int map[64][64]){
                 e->type = rand()%3 + 1;
                 e->hitbox = create_hitbox((float)j * SIZE, (float)i * SIZE);
                 e->timer = 0;
+                e->facing = rand()%2 + 1;
                 asign_stats(e);
                 list_add(l,e);
 
@@ -359,15 +362,18 @@ List* summon_enemies(int map[64][64]){
     return l;
 }
 
-void draw_enemies(List* l){
+void draw_enemies(List* l, Texture2D sprite){
     for (int i = 0; i < list_size(l); ++i) {
         Enemy* e = list_get(l, i);
-        Color c = e->type == 1? SKYBLUE: e->type == 2? RED: YELLOW;
+
+        Rectangle r = {SIZE * (e->facing - 1) * 3,SIZE * (e->type - 1) * 2,SIZE * 3,SIZE * 2};
+        Vector2 v = {e->hitbox.x - SIZE, e->hitbox.y - SIZE};
 
         if(e->timer % 16 > 8 || e->timer < 16)
-            DrawRectangleRec(e->hitbox, c);
+            DrawTextureRec(sprite, r, v, WHITE);
+
     }
-}      //ESTO SE VA A CAMBIAR
+}
     //cosas de manage
 void move_enemies(Player* p, Enemy* e){
 
@@ -387,6 +393,7 @@ void move_enemies(Player* p, Enemy* e){
     movement_x = movement_x / total * e->speed;
     movement_y = movement_y / total * e->speed;
 
+    e->facing = dir_x > 0? 2: 1;
     e->hitbox.x += movement_x;
     e->hitbox.y += movement_y;
 
@@ -430,6 +437,7 @@ Enemy* pequeno(Player* p, Enemy* e){
         e_2->type = 3;
         e_2->hitbox = create_hitbox(e->hitbox.x, e->hitbox.y);
         e_2->timer = 0;
+        e->facing = rand()%2 + 1;
         asign_stats(e_2);
         return e_2;
     }

@@ -13,13 +13,13 @@ Rectangle hitbox_arma(int lado, float eje_x, float eje_y){
     if(lado % 2){
         r.width = SIZE * 2.0;
         r.height = SIZE * 1.5;
-        r.x = eje_x - SIZE / 2.0;
+        r.x = eje_x - SIZE / 2.0 - 1;
         r.y = lado == 3? eje_y + SIZE / 2.0: eje_y - SIZE;
     }
     else{
         r.width = SIZE * 1.5;
         r.height = SIZE * 2.0;
-        r.y = eje_y - SIZE / 2.0;
+        r.y = eje_y - SIZE / 2.0 - 1;
         r.x = lado == 2? eje_x + SIZE / 2.0: eje_x - SIZE;
     }
 
