@@ -18,7 +18,6 @@ struct player{
     int timer_damage;
     int timer_atack;
     int timer_awas;
-    Camera2D camara;
 };
 
 struct wall{
@@ -33,9 +32,6 @@ struct awas{
 
 struct floor{
     Rectangle place;
-    int tipo;           //De mientras, se borra después
-    //Vector?           Ubicación de la imagen
-    //Imagen            Imagen del sprite
 };
 
 struct enemy{
@@ -55,8 +51,8 @@ struct enemy{
 void draw_stats(Player* p, Texture2D spr, Camera2D c){
 
     Vector2 v;
-    float esquina_x = p->hitbox.x + (S_WIDHT/SIZE /2 - 2)/c.zoom * SIZE;
-    float esquina_y =  p->hitbox.y - (S_HEIGHT/SIZE /2 - 2)/c.zoom * SIZE;
+    float esquina_x = p->hitbox.x + ((float)S_WIDHT/SIZE /2 - 2)/c.zoom * SIZE;
+    float esquina_y =  p->hitbox.y - ((float)S_HEIGHT/SIZE /2 - 2)/c.zoom * SIZE;
 
     if(list_size(p->awas)) {
         AwasdeSabor *a = list_peek(p->awas);
@@ -66,8 +62,8 @@ void draw_stats(Player* p, Texture2D spr, Camera2D c){
 
     for(int i = 0; i < p->vida; i++) {
         int cora = i < p->max_vida? 4: 5;
-        Rectangle r = create_hitbox(0, cora * 16);
-        esquina_x =  p->hitbox.x - (S_WIDHT/SIZE /2 - 2 - i* c.zoom)/c.zoom * SIZE;
+        Rectangle r = create_hitbox(0, (float)cora * 16);
+        esquina_x =  p->hitbox.x - ((float)S_WIDHT/SIZE /2 - 2 - (float)i* c.zoom)/c.zoom * SIZE;
         v = (Vector2){esquina_x, esquina_y};
         DrawTextureRec(spr, r, v, WHITE);
     }
@@ -87,8 +83,7 @@ List* spawn_awas(Vector2* v){
     list_add(l,a);
 
     return l;
-
-};
+}
 
 void draw_awa(List* l, Texture2D spr){
     for(int i = 0; i < list_size(l); i++){
@@ -148,7 +143,7 @@ Player* create_player(Vector2* v){
 }
 
 void draw_player(Player* p, Texture2D sprite, Texture2D hit){
-    Rectangle r = {0,(p->facing - 1) * SIZE * 2,SIZE * 2,SIZE * 2};
+    Rectangle r = {0,(float)(p->facing - 1) * SIZE * 2,SIZE * 2,SIZE * 2};
     Vector2 v = {p->arma.x, p->arma.y};
 
     if(p->timer_atack > FPS)
@@ -320,13 +315,13 @@ void asign_stats(Enemy* e){
     float r_2 = (float)(rand()%7 -3)/10;
 
     switch (e->type) {
-        case 1: //Pequeño y rápido
+        case 1:     //Base
             e->vida = 4;
-            e->speed = velocidad(2.65f + r);
+            e->speed = velocidad(2.6f + r);
             e->damage = 1;
-            e->vision = 3.5f + r_2;
+            e->vision = 4 + r_2;
             break;
-        case 2: //Tanque agresivo
+        case 2:     //Tanque agresivo
             e->vida = 8;
             e->speed = velocidad(1 + r);
             e->damage = 2;
@@ -334,10 +329,28 @@ void asign_stats(Enemy* e){
             break;
         case 3:    //Pequeño que se multiplica
             e->vida = 2;
-            e->speed = velocidad(2.3f + r * 2);
+            e->speed = velocidad(2.2f + r * 3);
             e->damage = 1;
-            e->vision = 3.5f + r_2;
+            e->vision = 4.5f + r_2;
             e->timer_extra = 0;
+            break;
+        case 4:     //Mímico
+            e->vida = 3;
+            e->speed = velocidad(3 + r);
+            e->damage = 2;
+            e->vision = 1 + r_2;
+            break;
+        case 5:     //timido
+            e->vida = 4;
+            e->speed = velocidad(2.8f + r);
+            e->damage = 1;
+            e->vision = 6.5f + r_2;
+            break;
+        default:
+            e->vida = 1;
+            e->speed = 0;
+            e->damage = 0;
+            e->vision = 0;
     }
 }
 
@@ -348,7 +361,7 @@ List* summon_enemies(int map[64][64]){
         for (int j = 0; j < 64; ++j) {      //j = x
             if(map[i][j] == FLOOR_SPAWN){
                 Enemy* e = malloc(sizeof(Enemy));
-                e->type = rand()%3 + 1;
+                e->type = rand()%5 + 1;
                 e->hitbox = create_hitbox((float)j * SIZE, (float)i * SIZE);
                 e->timer = 0;
                 e->facing = rand()%2 + 1;
@@ -388,14 +401,33 @@ void move_enemies(Player* p, Enemy* e){
     int dir_x = movement_x > 0? 1: -1;
     int dir_y = movement_y > 0? 1: -1;
 
-    float total = (movement_x * dir_x) + (movement_y * dir_y);
+    float total = (movement_x * (float)dir_x) + (movement_y * (float)dir_y);
 
     movement_x = movement_x / total * e->speed;
     movement_y = movement_y / total * e->speed;
 
+    float huida_x = 1;
+    float huida_y = 1;
+    if(e->type == 5){
+        if(p->facing == 3 && dir_y < 0 && movement_y * (float)dir_y > movement_x * (float)dir_x)
+            huida_y *= -1;
+        if(p->facing == 1 && dir_y > 0 && movement_y * (float)dir_y > movement_x * (float)dir_x)
+            huida_y *= -1;
+        if(p->facing == 2 && dir_x < 0 && movement_x * (float)dir_x > movement_x * (float)dir_y)
+            huida_x *= -1;
+        if(p->facing == 4 && dir_x > 0 && movement_x * (float)dir_x > movement_x * (float)dir_y)
+            huida_x *= -1;
+
+        if(distance(p->hitbox, e->hitbox) > (e->vision - 2.5) * SIZE && huida_y < 0 && huida_x < 0) {
+            huida_x = 0;
+            huida_y = 0;
+        }
+    }
+
     e->facing = dir_x > 0? 2: 1;
-    e->hitbox.x += movement_x;
-    e->hitbox.y += movement_y;
+
+    e->hitbox.x += movement_x * huida_x;
+    e->hitbox.y += movement_y * huida_y;
 
 }
 
@@ -410,7 +442,7 @@ void lastimar_atacar(Player* p, Enemy* e){
 
     // Daño a jugador
     if(CheckCollisionRecs(p->hitbox, e->hitbox) && !p->timer_damage){
-        p->timer_damage += FPS * 1.5;
+        p->timer_damage += (int)(FPS * 1.5);
         p->vida -= e->damage;
     }
 
@@ -419,8 +451,9 @@ void lastimar_atacar(Player* p, Enemy* e){
 
 
 //ENEMIGOS ESPECIALES
+
 Enemy* pequeno(Player* p, Enemy* e){
-    if(distance(p->hitbox, e->hitbox) > (e->vision + 1) * 2 * SIZE){
+    if(distance(p->hitbox, e->hitbox) > (e->vision + 1) * 1.5 * SIZE){
         e->timer_extra = 0;
         return NULL;
     }
@@ -446,6 +479,13 @@ Enemy* pequeno(Player* p, Enemy* e){
     return NULL;
 }
 
+void mimico(Player* p, Enemy* e){
+    if(distance(p->hitbox, e->hitbox) > (e->vision + 1) * SIZE)
+        e->vision = 1;
+    else
+        e->vision = 3.5f;
+}
+
 int manage_enemies(Player* p, List* l, List* a){
 
     for(int i = 0; i < list_size(l); i++){
@@ -456,14 +496,16 @@ int manage_enemies(Player* p, List* l, List* a){
             if (e_2)
                 list_add(l, e_2);
         }
-
+        if(e->type == 4)
+            mimico(p, e);
 
         move_enemies(p, e);
         lastimar_atacar(p, e);
 
         if(e->vida<=0) {
-            if(rand()% 5 < 1)         //QUE SEA UN 20%
+            if(e->type == 4 || rand()% 6 < 1)
                 drop_awa(a, e->hitbox);
+
 
             list_delete(l, i);
         }
@@ -474,9 +516,6 @@ int manage_enemies(Player* p, List* l, List* a){
     else
         return 1;
 }
-
-
-
 
 
 //CAMARA
