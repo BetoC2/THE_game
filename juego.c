@@ -146,18 +146,39 @@ Player* create_player(Vector2* v){
     return jugador;
 }
 
-void draw_player(Player* p, Texture2D sprite, Texture2D hit){
+void draw_player(Player* p, Texture2D sprite, Texture2D hit, Texture2D sprite_r){
     Rectangle r = {0,(float)(p->facing - 1) * SIZE * 2,SIZE * 2,SIZE * 2};
     Vector2 v = {p->arma.x, p->arma.y};
 
     if(p->timer_atack > FPS)
         DrawTextureRec(hit, r, v, WHITE);
+    
+    if(p->timer_damage % 16 > 8 || p->timer_damage < 16){
+        if(p->facing == 1){ //Arriba
+            Rectangle recto = {0 * TILE, 0 * TILE, (float)sprite.width / 6, (float)sprite.height / 5};
+            Vector2 victor = {p->hitbox.x -17, p->hitbox.y -27};
+            DrawTextureRec(sprite, recto, victor, WHITE);
+        }
+        else if(p->facing == 3){ //Abajo
+            Rectangle recto = {2 * TILE, 0 * TILE, (float)sprite_r.width / 6, (float)sprite_r.height / 5};
+            Vector2 victor = {p->hitbox.x -33, p->hitbox.y -27};
+            DrawTextureRec(sprite_r, recto, victor, WHITE);
+        }
+        else if(p->facing == 2){ //Derecha
+            Rectangle recto = {5 * TILE, 0 * TILE, (float)sprite.width / 6, (float)sprite.height / 5};
+            Vector2 victor = {p->hitbox.x-33, p->hitbox.y-27};
+            DrawTextureRec(sprite, recto, victor, WHITE);
+        }
+        else if(p->facing == 4){ //Izquierda
+            Rectangle recto = {0 * TILE, 0 * TILE, (float)sprite_r.width / 6, (float)sprite_r.height / 5};
+            Vector2 victor = {p->hitbox.x-17, p->hitbox.y-27};
+            DrawTextureRec(sprite_r, recto, victor, WHITE);
+        }
+    }
 
-    if(p->timer_damage % 16 > 8 || p->timer_damage < 16)
-        DrawRectangleRec(p->hitbox,WHITE);
 
-}   //ESTO SE VA A CAMBIAR
-    //cosas de manage
+}
+
 void move_player(Player* p){
     if(IsKeyDown(KEY_W) && p->side[0] != 3 && p->side[1] != 3) p->hitbox.y -= p->speed;    //Arriba
     if(IsKeyDown(KEY_S) && p->side[0] != 1 && p->side[1] != 1) p->hitbox.y += p->speed;    //Abajo
