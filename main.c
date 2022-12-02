@@ -2,6 +2,7 @@
 #include "juego.h"
 #include "global.h"
 #include "map.h"
+#include "screen.h"
 
 
 int main(void)
@@ -20,6 +21,9 @@ int main(void)
     sprite_enemi = LoadTexture("../assets/enemies.png");
     sprite_hit = LoadTexture("../assets/hit.png");
 
+    //Fuentes
+    Font fuente = LoadFont("../assets/Monocraft.otf");
+
     //Creación del mapa al azar
     int map[64][64];
     int bridges[64][64];
@@ -35,9 +39,11 @@ int main(void)
     List* awas_tiradas = spawn_awas(&initial_position);
     Camera2D camara = crear_camara(jugador);
 
-
     int se_perdio;
 
+    //Antes de iniciar el juego, se renderiza la pantalla de título
+    if (!screen_title(map, bridges, &water_temp, camara, fuente, sprite_w, sprite_d, sprite_decor))
+        return 0;
 
     // YO SOY EL JUEGO :O
     while (!WindowShouldClose())    //Ver si se presiona esc o cierran la ventana
@@ -53,7 +59,6 @@ int main(void)
 
         if(se_perdio)
             break;
-
 
 
         BeginDrawing(); //---------------------
@@ -73,13 +78,16 @@ int main(void)
         EndMode2D();
         EndDrawing(); //-----------------------
 
+        if (!screen_update(map, bridges, &water_temp, camara, fuente, sprite_w, sprite_d, sprite_decor))
+            break;
     }
 
     CloseWindow();
+    /*
     if(rand()%2 && se_perdio)
         OpenURL("https://www.youtube.com/watch?v=RmUWWVZw28E");
     else if(se_perdio)
         OpenURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-
+    */
     return 0;
 }
