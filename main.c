@@ -61,7 +61,7 @@ int main(void)
             if(!screen_gameover(camara, fuente))
                 break;
             else{
-                //Aqui falta implementar un list_kill
+                matar_todo(jugador, paredes, enemigos, awas_tiradas);
                 map_generate(map, bridges, &initial_position);
                 jugador = create_player(&initial_position);
                 paredes = crate_walls(bridges);

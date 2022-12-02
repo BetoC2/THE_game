@@ -26,6 +26,9 @@ int manage_enemies(Player* p, List* l, List* a);
 //Cámara
 Camera2D crear_camara(Player* p);
 void update_camara(Player* p, Camera2D* c);
+
+//Cosos
 void draw_stats(Player* p, Texture2D spr, Camera2D c);
+void matar_todo(Player* p, List* l_2, List* l_3, List* l_4);
 
 #endif //GAME_JUEGO_H

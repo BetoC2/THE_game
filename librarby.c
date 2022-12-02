@@ -75,9 +75,10 @@ void list_delete(List* l, int position){
     l->elements--;
     if(l->elements <= 0)
         return;
-    l->array[position] = l->array[l->elements];
-    l->array[l->elements] = NULL;
 
+    l->array[position] = l->array[l->elements];
+    free(l->array[l->elements]);
+    l->array[l->elements] = NULL;
 }
 
 void* list_get(List* l, int position){
@@ -101,4 +102,12 @@ void* list_peek(List* l){
     if(l->elements <= 0)
         return NULL;
     return l->array[l->elements-1];
+}
+
+void list_kill(List* l){
+    for(int i = 0; i < list_size(l); ++i) {
+        list_delete(l, 0);
+    }
+
+    free(l);
 }

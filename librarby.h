@@ -13,6 +13,7 @@ double distance(Rectangle point_1, Rectangle point_2);
 
 //Funciones Listas
 List* new_list();
+void list_kill(List* l);
 
 //Lista rara para recorrerse enteramente
 void list_add(List* l, void* element);

@@ -71,6 +71,15 @@ void draw_stats(Player* p, Texture2D spr, Camera2D c){
 
 }
 
+void matar_todo(Player* p, List* l_2, List* l_3, List* l_4){
+    list_kill(p->awas);
+    list_kill(l_2);
+    list_kill(l_3);
+    list_kill(l_4);
+    free(p);
+
+}
+
 
 //AWAS
 List* spawn_awas(Vector2* v){
@@ -229,6 +238,7 @@ void use_awas(Player* p){
                 break;
         }
 
+        free(a);
         p->vida = p->vida > 10? 10: p->vida;
 
     }
@@ -240,6 +250,7 @@ void use_awas(Player* p){
             p->speed = velocidad(3.5f);
         }
     }
+
 }
 
 int manage_player(Player* p){
@@ -361,7 +372,7 @@ List* summon_enemies(int map[64][64]){
         for (int j = 0; j < 64; ++j) {      //j = x
             if(map[i][j] == FLOOR_SPAWN){
                 Enemy* e = malloc(sizeof(Enemy));
-                e->type = 5;//rand()%5 + 1;
+                e->type = rand()%5 + 1;
                 e->hitbox = create_hitbox((float)j * SIZE, (float)i * SIZE);
                 e->timer = 0;
                 e->facing = rand()%2 + 1;
