@@ -20,20 +20,6 @@ struct player{
     int timer_awas;
 };
 
-struct wall{
-    Rectangle hitbox;   // Posición y zona de colisión
-};
-
-struct awas{
-    int sabor;
-    Rectangle ubicacion;
-    Rectangle sprite;
-};
-
-struct floor{
-    Rectangle place;
-};
-
 struct enemy{
     Rectangle hitbox;   // Posición y zona de choque
     int type;           // Tipo de enemigo
@@ -46,6 +32,15 @@ struct enemy{
     int timer_extra;
 };
 
+struct wall{
+    Rectangle hitbox;   // Posición y zona de colisión
+};
+
+struct awas{
+    int sabor;
+    Rectangle ubicacion;
+    Rectangle sprite;
+};
 
 //STATS Y EXTRAS
 void draw_stats(Player* p, Texture2D spr, Camera2D c){
