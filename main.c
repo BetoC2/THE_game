@@ -57,9 +57,19 @@ int main(void)
         if(manage_enemies(jugador, enemigos, awas_tiradas))
             break;
 
-        if(se_perdio)
-            break;
-
+        if(se_perdio){
+            if(!screen_gameover(camara, fuente))
+                break;
+            else{
+                //Aqui falta implementar un list_kill
+                map_generate(map, bridges, &initial_position);
+                jugador = create_player(&initial_position);
+                paredes = crate_walls(bridges);
+                enemigos = summon_enemies(map);
+                awas_tiradas = spawn_awas(&initial_position);
+                camara = crear_camara(jugador);
+            }
+        }
 
         BeginDrawing(); //---------------------
         BeginMode2D(camara);
@@ -81,7 +91,6 @@ int main(void)
         if (!screen_update(map, bridges, &water_temp, camara, fuente, sprite_w, sprite_d, sprite_decor))
             break;
     }
-
     CloseWindow();
     /*
     if(rand()%2 && se_perdio)
