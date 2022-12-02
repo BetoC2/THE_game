@@ -361,7 +361,7 @@ List* summon_enemies(int map[64][64]){
         for (int j = 0; j < 64; ++j) {      //j = x
             if(map[i][j] == FLOOR_SPAWN){
                 Enemy* e = malloc(sizeof(Enemy));
-                e->type = rand()%5 + 1;
+                e->type = 5;//rand()%5 + 1;
                 e->hitbox = create_hitbox((float)j * SIZE, (float)i * SIZE);
                 e->timer = 0;
                 e->facing = rand()%2 + 1;
@@ -406,28 +406,22 @@ void move_enemies(Player* p, Enemy* e){
     movement_x = movement_x / total * e->speed;
     movement_y = movement_y / total * e->speed;
 
-    float huida_x = 1;
-    float huida_y = 1;
-    if(e->type == 5){
+    float huida = 1;
+    if(e->type == 5 && distance(p->hitbox, e->hitbox) < e->vision * 3 / 4 * SIZE){
         if(p->facing == 3 && dir_y < 0 && movement_y * (float)dir_y > movement_x * (float)dir_x)
-            huida_y *= -1;
-        if(p->facing == 1 && dir_y > 0 && movement_y * (float)dir_y > movement_x * (float)dir_x)
-            huida_y *= -1;
+            huida *= -0.75f;
+        if(p->facing == 1 && dir_y > 0 && movement_y * (float)dir_y >= movement_x * (float)dir_x)
+            huida *= -0.75f;
         if(p->facing == 2 && dir_x < 0 && movement_x * (float)dir_x > movement_x * (float)dir_y)
-            huida_x *= -1;
-        if(p->facing == 4 && dir_x > 0 && movement_x * (float)dir_x > movement_x * (float)dir_y)
-            huida_x *= -1;
-
-        if(distance(p->hitbox, e->hitbox) > (e->vision - 2.5) * SIZE && huida_y < 0 && huida_x < 0) {
-            huida_x = 0;
-            huida_y = 0;
-        }
+            huida *= -0.75f;
+        if(p->facing == 4 && dir_x > 0 && movement_x * (float)dir_x >= movement_x * (float)dir_y)
+            huida *= -0.75f;
     }
 
     e->facing = dir_x > 0? 2: 1;
 
-    e->hitbox.x += movement_x * huida_x;
-    e->hitbox.y += movement_y * huida_y;
+    e->hitbox.x += movement_x * huida;
+    e->hitbox.y += movement_y * huida;
 
 }
 
