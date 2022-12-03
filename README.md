@@ -19,4 +19,5 @@ Nuestro juego genera un mapa aleatorio cada pártida, en dónde se generan nuevo
 
 ## Créditos
 
-Este juego utilizó las texturas ofrecidas por @analogstudios, link a su paquete de [texturas](https://analogstudios.itch.io/forest)
+- Los enemigos y las aguas de sabor fueron dibujadas por @Yael, que grande. 
+- Este juego utilizó las texturas ofrecidas por @analogstudios, link a su paquete de [texturas](https://analogstudios.itch.io/forest)
