@@ -52,11 +52,11 @@ int main(void)
 
         // Cambios
         update_camara(jugador, &camara);
-        chocar_paredes( jugador, paredes);
         manage_awa(awas_tiradas, jugador);
         se_perdio = manage_player(jugador);
         if(manage_enemies(jugador, enemigos, awas_tiradas))
             break;
+        chocar_paredes( jugador, paredes);
 
         if(se_perdio){
             if(!screen_gameover(camara, fuente))

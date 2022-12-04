@@ -32,15 +32,16 @@ struct enemy{
     int timer_extra;
 };
 
-struct wall{
-    Rectangle hitbox;   // Posición y zona de colisión
-};
-
 struct awas{
     int sabor;
     Rectangle ubicacion;
     Rectangle sprite;
 };
+
+struct wall{
+    Rectangle hitbox;   // Posición y zona de colisión
+};
+
 
 //STATS Y EXTRAS
 void draw_stats(Player* p, Texture2D spr, Camera2D c){
@@ -311,14 +312,13 @@ List* crate_walls(int map[64][64]){
     //cosas de manage
 void chocar_paredes(Player* p, List* w) {
 
-    int side;
+    int side = 0;
 
     for (int i = 0; i < list_size(w); i++) {
 
         Wall *curr = list_get(w, i);
         if (!CheckCollisionRecs(p->hitbox, curr->hitbox))
             continue;
-
 
         float dif_x = diferencia(p->hitbox.x, curr->hitbox.x);
         float dif_y = diferencia(p->hitbox.y, curr->hitbox.y);
@@ -327,6 +327,15 @@ void chocar_paredes(Player* p, List* w) {
             side = (p->hitbox.y - curr->hitbox.y) < 0 ? 1 : 3;
         else if (dif_y < SIZE && dif_x >= dif_y)
             side = (p->hitbox.x - curr->hitbox.x) < 0 ? 4 : 2;
+
+        if(side==1)
+            p->hitbox.y = p->hitbox.y - (SIZE - dif_y) +2;
+        if(side==2)
+            p->hitbox.x = p->hitbox.x + (SIZE - dif_x);
+        if(side==3)
+            p->hitbox.y = p->hitbox.y + (SIZE - dif_y);
+        if(side==4)
+            p->hitbox.x = p->hitbox.x - (SIZE - dif_x) +2;
 
         if (p->side[0] == 0)
             p->side[0] = side;
