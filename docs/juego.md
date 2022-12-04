@@ -62,7 +62,7 @@ En general las funciones que pueden llamarse desde main se agrupan en 3, funcion
 ```create_walls``` y ```summon_enemies``` de igual forma generan una lista donde se inicializan cada una de sus respectivas estructuras, ubicándolos gracias a un gran ciclo que recorre la matriz dada desde la función que genera el mapa. Dentro de ```summon_enemies``` además se asignan de forma aleatoria las distintas estadísticas como vida, velocidad y daño dependiendo del tipo de enemigo gracias a la función ```asign_stats``` que en esencia es un gran switch.
 Tanto ```draw_enemies``` como ```draw_awa``` aprovechan que las imágenes usadas para crear sus texturas se encuentran distribuidas de una forma específica para que los rectángulos de DrawTextureRec salgan a partir de cálculos con la información de cada struct, es decir, recorren sus respectivas listas, dependiendo del tipo de awa o enemigo se ubica el rectángulo y a partir de la hitbox de cada dato se ubica en el mapa donde el sprite debe dibujarse.
 
-![gato](./images/gato.png) Yo había ponido el ```draw_player``` y el ```library.c``` aquí
+![gato](./images/gato.png) Yo había ponido el ```draw_player``` [aquí](./render.md#personajes)
 
 ## **Funciones manage**
 
