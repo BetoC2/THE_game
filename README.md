@@ -16,6 +16,7 @@ Nuestro juego genera un mapa aleatorio cada pártida, en donde se generan nuevos
 | D       | Moverte hacia la derecha   |
 | P       | Abrir el menú de pausa     |
 | Espacio | Atacar                     | 
+| Shift   | Tomarte una poción         | 
 
 
 ## Funcionamiento
