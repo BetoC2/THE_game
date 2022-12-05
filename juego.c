@@ -111,14 +111,16 @@ void manage_awa(List* l, Player* p){
         if(CheckCollisionRecs(p->hitbox, a->ubicacion)){
             list_delete(l, i);
             list_add(p->awas, a);
+            break;
         }
+
 
     }
 }
 
 void drop_awa(List* l, Rectangle r){
     AwasdeSabor* a = malloc(sizeof(AwasdeSabor));
-    a->sabor = rand()%4 + 1;
+    a->sabor = (rand()%4) + 1;
     a->ubicacion = r;
     a->sprite = create_hitbox(0, (float)(a->sabor - 1) * 16);
 
@@ -363,7 +365,7 @@ void asign_stats(Enemy* e){
             e->vision = 4 + r_2;
             break;
         case 2:     //Tanque agresivo
-            e->vida = 8;
+            e->vida = 7;
             e->speed = velocidad(1 + r);
             e->damage = 2;
             e->vision = 6 + r_2;
@@ -537,12 +539,14 @@ int manage_enemies(Player* p, List* l, List* a){
         move_enemies(p, e);
         lastimar_atacar(p, e);
 
-        if(e->vida<=0) {
+        if(e->vida <= 0) {
             if(e->type == 4 || rand()% 6 < 1)
                 drop_awa(a, e->hitbox);
 
-
+            printf("Lo vamoa matar \n");
             list_delete(l, i);
+            printf("Ha morido\n");
+            break;
         }
     }
 

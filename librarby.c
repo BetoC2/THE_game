@@ -73,12 +73,15 @@ void list_add(List* l, void* element){
 
 void list_delete(List* l, int position){
     l->elements--;
+    printf("- -- \n");
     if(l->elements <= 0)
         return;
 
+    free(l->array[position]);
+
     l->array[position] = l->array[l->elements];
-    free(l->array[l->elements]);
     l->array[l->elements] = NULL;
+
 }
 
 void* list_get(List* l, int position){
