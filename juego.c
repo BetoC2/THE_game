@@ -47,13 +47,18 @@ struct wall{
 void draw_stats(Player* p, Texture2D spr, Camera2D c){
 
     Vector2 v;
+    int potis;
+    int size = list_size(p->awas);
     float esquina_x = p->hitbox.x + ((float)S_WIDHT/SIZE /2 - 2)/c.zoom * SIZE;
     float esquina_y =  p->hitbox.y - ((float)S_HEIGHT/SIZE /2 - 2)/c.zoom * SIZE;
 
-    if(list_size(p->awas)) {
-        AwasdeSabor *a = list_peek(p->awas);
-        v = (Vector2){esquina_x,esquina_y};
-        DrawTextureRec(spr, a->sprite, v, WHITE);
+    if(size) {
+        potis = size > 3 ? 3: size;
+        for (int i = 0, max = size - 1; i < potis; i++, max--) {
+            AwasdeSabor *a = list_get(p->awas, max);
+            v = (Vector2) {esquina_x - (i * SIZE), esquina_y};
+            DrawTextureRec(spr, a->sprite, v, WHITE);
+        }
     }
 
     for(int i = 0; i < p->vida; i++) {
@@ -500,7 +505,7 @@ Enemy* pequeno(Player* p, Enemy* e){
         e_2->type = 3;
         e_2->hitbox = create_hitbox(e->hitbox.x, e->hitbox.y);
         e_2->timer = 0;
-        e->facing = rand()%2 + 1;
+        e_2->facing = rand()%2 + 1;
         asign_stats(e_2);
         return e_2;
     }

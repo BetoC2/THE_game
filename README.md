@@ -22,7 +22,7 @@ Nuestro juego genera un mapa aleatorio cada pártida, en donde se generan nuevos
 
 - Acerca de la [generación del mundo](./docs/mapa.md)
 - Acerca de la [jugabilidad](./docs/juego.md)
-- Acerca del renderizado (por documentar)
+- Acerca del [renderizado](./docs/render.md) 
 
 ---
 

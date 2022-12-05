@@ -25,3 +25,7 @@ En esta categoría se dibujan a los enemigos y al personaje principal, para rend
     Esta función recibe las sprites del jugador (Depende de la dirección a la que se dirige) y la textura del ataque. Si el personaje está atacando en el momento en el que la función es llamada, se renderizará la textura de ataque en la dirección a la que esté volteando. La textura que tendrá el jugador, dependerá de su dirección, dando 4 posibles texturas por cada lado.
 
 - ```void draw_enemies(List* l, Texture2D sprite):``` Esta función recibe la lista de todos los enemigos y el sprite en dónde se encuentra su respectiva textura para posteriormente a cada uno de ellos
+
+## Pantallas
+
+En la librería ```screen.h``` se encentran todas las pantallas, todas funcionan de manera similar, existen 2 opciones, continuar/iniciar la partida y salir del juego, si el usuario pulsa la opción se salir, independientemente del estado del juego, se garantiza que la aplicación se cerrará.

@@ -15,4 +15,7 @@ int screen_pause(int map[64][64], int bridges[64][64], int *water_temp, Camera2D
 
 int screen_gameover(Camera2D camara, Font fuente);
 
+int screen_win(Camera2D camara, Font fuente);
+
+
 #endif //GAME_SCREEN_H

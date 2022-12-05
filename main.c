@@ -54,10 +54,24 @@ int main(void)
         update_camara(jugador, &camara);
         manage_awa(awas_tiradas, jugador);
         se_perdio = manage_player(jugador);
-        if(manage_enemies(jugador, enemigos, awas_tiradas))
-            break;
+
+        //En caso de victoria
+        if(manage_enemies(jugador, enemigos, awas_tiradas)) {
+            if (!screen_win(camara, fuente))
+                break;
+            else {
+                matar_todo(jugador, paredes, enemigos, awas_tiradas);
+                map_generate(map, bridges, &initial_position);
+                jugador = create_player(&initial_position);
+                paredes = crate_walls(bridges);
+                enemigos = summon_enemies(map);
+                awas_tiradas = spawn_awas(&initial_position);
+                camara = crear_camara(jugador);
+            }
+        }
         chocar_paredes( jugador, paredes);
 
+        //En caso de derrota
         if(se_perdio){
             if(!screen_gameover(camara, fuente))
                 break;
