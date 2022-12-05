@@ -105,9 +105,8 @@ void* list_peek(List* l){
 }
 
 void list_kill(List* l){
-    for(int i = 0; i < list_size(l); ++i) {
-        list_delete(l, 0);
-    }
+    while(list_size(l) > 0)
+        list_delete(l,0);
 
     free(l);
 }
