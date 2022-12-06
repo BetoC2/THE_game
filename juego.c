@@ -543,9 +543,7 @@ int manage_enemies(Player* p, List* l, List* a){
             if(e->type == 4 || rand()% 6 < 1)
                 drop_awa(a, e->hitbox);
 
-            printf("Lo vamoa matar \n");
             list_delete(l, i);
-            printf("Ha morido\n");
             break;
         }
     }
